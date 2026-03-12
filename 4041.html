@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Payment Gateway | 404</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:#fff;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+overflow:hidden;
+}
+
+/* container */
+
+#stackly404Container{
+max-width:700px;
+padding:30px;
+}
+
+/* 404 number */
+
+.stackly404Number{
+font-size:140px;
+font-weight:700;
+letter-spacing:10px;
+background:linear-gradient(45deg,#00ffd5,#00bfff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:glow 3s infinite alternate;
+}
+
+@keyframes glow{
+from{filter:drop-shadow(0 0 10px #00ffd5);}
+to{filter:drop-shadow(0 0 25px #00bfff);}
+}
+
+/* text */
+
+.stackly404Title{
+font-size:28px;
+margin-top:10px;
+font-weight:600;
+}
+
+.stackly404Text{
+margin-top:10px;
+opacity:.8;
+font-size:15px;
+}
+
+/* search */
+
+.stacklySearchBox{
+margin-top:25px;
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.stacklySearchBox input{
+padding:12px 16px;
+border-radius:30px;
+border:none;
+outline:none;
+width:240px;
+}
+
+.stacklySearchBox button{
+padding:12px 20px;
+border:none;
+border-radius:30px;
+background:#00ffd5;
+cursor:pointer;
+font-weight:600;
+}
+
+/* buttons */
+
+.stacklyBtns{
+margin-top:30px;
+display:flex;
+gap:15px;
+justify-content:center;
+flex-wrap:wrap;
+}
+
+.stacklyBtns a{
+text-decoration:none;
+padding:12px 24px;
+border-radius:30px;
+font-weight:500;
+transition:.3s;
+}
+
+.stacklyHomeBtn{
+background:#00ffd5;
+color:#000;
+}
+
+.stacklyDashBtn{
+border:1px solid #00ffd5;
+color:#00ffd5;
+}
+
+.stacklyBtns a:hover{
+transform:scale(1.05);
+}
+
+/* floating coins animation */
+
+.stacklyCoin{
+position:absolute;
+width:40px;
+height:40px;
+border-radius:50%;
+background:linear-gradient(45deg,#00ffd5,#00bfff);
+opacity:.15;
+animation:float 10s infinite linear;
+}
+
+.stacklyCoin:nth-child(1){left:10%;top:90%;animation-delay:0s;}
+.stacklyCoin:nth-child(2){left:25%;top:95%;animation-delay:2s;}
+.stacklyCoin:nth-child(3){left:50%;top:100%;animation-delay:4s;}
+.stacklyCoin:nth-child(4){left:75%;top:90%;animation-delay:1s;}
+.stacklyCoin:nth-child(5){left:90%;top:95%;animation-delay:3s;}
+
+@keyframes float{
+0%{transform:translateY(0)}
+100%{transform:translateY(-110vh)}
+}
+
+/* mobile */
+
+@media(max-width:600px){
+
+.stackly404Number{
+font-size:90px;
+}
+
+.stackly404Title{
+font-size:22px;
+}
+
+.stacklySearchBox input{
+width:180px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="stackly404Container">
+
+<div class="stackly404Number">404</div>
+
+<div class="stackly404Title">
+Stackly Payment Gateway
+</div>
+
+<div class="stackly404Text">
+Oops! The page you are looking for doesn’t exist or the transaction page moved.
+</div>
+
+
+<div class="stacklyBtns">
+<a href="home.html" class="stacklyHomeBtn">Go Home</a>
+
+</div>
+
+</div>
+
+<!-- floating fintech coins -->
+
+<div class="stacklyCoin"></div>
+<div class="stacklyCoin"></div>
+<div class="stacklyCoin"></div>
+<div class="stacklyCoin"></div>
+<div class="stacklyCoin"></div>
+
+</body>
+</html>
