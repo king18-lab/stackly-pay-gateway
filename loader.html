@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stackly Processing</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#0f172a;
+color:white;
+}
+
+/* container */
+
+.loader-wrapper{
+text-align:center;
+}
+
+/* credit card */
+
+.card{
+width:180px;
+height:110px;
+background:linear-gradient(135deg,#6366f1,#06b6d4);
+border-radius:14px;
+position:relative;
+margin:auto;
+animation:cardMove 2s infinite ease-in-out;
+box-shadow:0 15px 40px rgba(0,0,0,0.3);
+}
+
+/* chip */
+
+.card::before{
+content:"";
+position:absolute;
+top:25px;
+left:20px;
+width:40px;
+height:30px;
+background:#ffd700;
+border-radius:6px;
+}
+
+/* lines */
+
+.card::after{
+content:"";
+position:absolute;
+bottom:25px;
+left:20px;
+width:90px;
+height:8px;
+background:white;
+border-radius:5px;
+}
+
+/* dots loader */
+
+.dots{
+margin-top:35px;
+display:flex;
+justify-content:center;
+gap:8px;
+}
+
+.dots span{
+width:10px;
+height:10px;
+background:#38bdf8;
+border-radius:50%;
+animation:dotBounce 1.2s infinite;
+}
+
+.dots span:nth-child(2){
+animation-delay:0.2s;
+}
+
+.dots span:nth-child(3){
+animation-delay:0.4s;
+}
+
+@keyframes dotBounce{
+
+0%,80%,100%{
+transform:scale(0);
+opacity:0.5;
+}
+
+40%{
+transform:scale(1);
+opacity:1;
+}
+
+}
+
+@keyframes cardMove{
+
+0%{transform:translateY(0)}
+50%{transform:translateY(-15px)}
+100%{transform:translateY(0)}
+
+}
+
+/* text */
+
+.processing-text{
+margin-top:20px;
+font-size:18px;
+letter-spacing:1px;
+color:#cbd5f5;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="loader-wrapper">
+
+<div class="card"></div>
+
+<div class="dots">
+<span></span>
+<span></span>
+<span></span>
+</div>
+
+<div class="processing-text">
+Stackly Processing Payment...
+</div>
+
+</div>
+
+</body>
+</html

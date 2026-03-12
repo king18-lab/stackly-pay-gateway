@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Stackly • 100% cover mobile menu (no search)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      color: #1e1e2f;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: #0f1a2b;
+      border-bottom: 4px solid #2b6cff;
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    .logo img {
+      height: auto;
+      width: 140px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Desktop menu - hidden on mobile */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 0.3rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e6ecf5;
+      font-weight: 500;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .nav-link i {
+      color: #2b6cff;
+      font-size: 1rem;
+    }
+
+    .nav-link:hover {
+      background: rgba(43, 108, 255, 0.15);
+      border-color: #2b6cff;
+      color: white;
+    }
+
+    /* Dropdown desktop */
+    .nav-item {
+      position: relative;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #0f1a2b;
+      min-width: 220px;
+      border-radius: 20px;
+      padding: 0.6rem 0;
+      box-shadow: 0 25px 35px -12px #000000cc, 0 0 0 1px #2b6cff;
+      border: 1px solid #2b6cff;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: 0.25s ease;
+      z-index: 100;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(6px);
+    }
+
+    .dropdown-content a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d3e0ff;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .dropdown-content a i {
+      width: 22px;
+      color: #2b6cff;
+    }
+
+    .dropdown-content a:hover {
+      background: #1a2f4a;
+      border-left-color: #2b6cff;
+      color: white;
+    }
+
+    /* Desktop right side - ONLY LOGIN (search removed) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid #2b6cff;
+      border-radius: 60px;
+      padding: 0.6rem 1.5rem;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .login-btn i {
+      font-size: 1rem;
+    }
+
+    .login-btn:hover {
+      background: #2b6cff;
+      color: white;
+      border-color: white;
+    }
+
+    /* Hamburger - perfect for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      background: #1f2b3f;
+      border-radius: 16px;
+      border: 2px solid #2b6cff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .hamburger:hover {
+      background: #2b6cff;
+    }
+    
+    .hamburger span {
+      width: 26px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    /* ===== 100% COVER MOBILE DRAWER (FULL SCREEN) ===== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 2999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;        /* 100% width */
+      height: 100vh;       /* 100% height */
+      background: #0a1322;
+      z-index: 3000;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      border-right: none;   /* no border, full coverage */
+      box-shadow: none;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #1f3a70;
+      padding-bottom: 1.2rem;
+    }
+
+    .drawer-logo img {
+      height: auto;
+      width: 150px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .close-drawer {
+      background: #1f3a70;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: white;
+      cursor: pointer;
+      border: 2px solid #2b6cff;
+      transition: 0.2s;
+    }
+    
+    .close-drawer:hover {
+      background: #2b6cff;
+    }
+
+    .mobile-menu {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .mobile-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: #eef4ff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .mobile-item i {
+      color: #2b6cff;
+      width: 28px;
+      font-size: 1.3rem;
+    }
+    
+    .mobile-item:hover {
+      background: #1f3a70;
+      transform: translateX(8px);
+    }
+
+    .mobile-dropdown {
+      margin-bottom: 0;
+    }
+    
+    .mobile-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+    
+    .mobile-dropdown-toggle:hover {
+      background: #1f3a70;
+    }
+    
+    .mobile-submenu {
+      display: none;
+      margin-left: 1.2rem;
+      margin-top: 10px;
+      padding-left: 1rem;
+      border-left: 4px solid #2b6cff;
+    }
+    
+    .mobile-submenu a {
+      display: block;
+      padding: 1rem 1.5rem;
+      background: #0e1a2a;
+      border-radius: 50px;
+      margin: 8px 0;
+      color: #b9d0ff;
+      text-decoration: none;
+      border-left: 4px solid transparent;
+      font-size: 1.1rem;
+    }
+    
+    .mobile-submenu a i {
+      margin-right: 12px;
+      color: #2b6cff;
+      width: 24px;
+    }
+    
+    .mobile-submenu a:hover {
+      background: #1f2f4a;
+      border-left-color: #2b6cff;
+    }
+    
+    .mobile-dropdown.open .mobile-submenu {
+      display: block;
+    }
+
+    /* Mobile login button - bigger for full screen */
+    .mobile-login {
+      background: #2b6cff;
+      border: none;
+      border-radius: 60px;
+      padding: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 2rem;
+      text-decoration: none;
+      border: 2px solid white;
+      transition: 0.2s;
+    }
+    
+    .mobile-login:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+    
+    .mobile-login i {
+      color: #0f1a2b;
+      font-size: 1.3rem;
+    }
+
+    /* RESPONSIVE: show hamburger on mobile */
+    @media screen and (max-width: 1024px) {
+      .nav-menu, .nav-actions {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .navbar {
+        padding: 0.3rem 1rem;
+      }
+    }
+
+    /* Small phones adjustments */
+    @media screen and (max-width: 400px) {
+      .logo img {
+        width: 120px;
+      }
+      .hamburger {
+        width: 44px;
+        height: 44px;
+      }
+      .mobile-drawer {
+        padding: 1.5rem 1rem;
+      }
+      .mobile-item, .mobile-dropdown-toggle {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.1rem;
+      }
+      .close-drawer {
+        width: 48px;
+        height: 48px;
+        font-size: 2rem;
+      }
+    }
+
+    /* Demo content */
+    .demo-content {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 40px;
+      border: 2px solid #2b6cff;
+      text-align: center;
+    }
+    .demo-content h1 {
+      color: #0f1a2b;
+      margin-bottom: 1rem;
+    }
+    .cover-note {
+      background: #2b6cff20;
+      padding: 1.2rem;
+      border-radius: 30px;
+      color: #0f1a2b;
+      margin-top: 2rem;
+      border: 2px dashed #2b6cff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR (DESKTOP + MOBILE HAMBURGER) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="stacklylogo (3).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- Desktop menu (hidden on mobile) -->
+      <ul class="nav-menu">
+        <li class="nav-item" id="desktopDropdown">
+          <a class="nav-link" id="desktopDropdownToggle">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="dropdown-content" id="desktopDropdownMenu">
+            <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+            <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+          </div>
+        </li>
+        <li><a href="soluation.html" class="nav-link"><i class="fas fa-compass"></i> Solutions</a></li>
+        <li><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+        <li><a href="services.html" class="nav-link"><i class="fas fa-cogs"></i> Services</a></li>
+        <li><a href="about.html" class="nav-link"><i class="fas fa-users"></i> About</a></li>
+        <li><a href="blog.html" class="nav-link"><i class="fas fa-blog"></i> Blog</a></li>
+      </ul>
+
+      <!-- Desktop actions: ONLY LOGIN (search removed) -->
+      <div class="nav-actions">
+        <a href="login.html" class="login-btn"><i class="fas fa-user"></i> Login</a>
+      </div>
+
+      <!-- Hamburger for mobile -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay (semi-transparent) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  
+  <!-- 100% COVER MOBILE DRAWER - FULL SCREEN -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="stacklylogo (3).webp" alt="logo">
+      </div>
+      <div class="close-drawer" id="closeDrawer"><i class="fas fa-times"></i></div>
+    </div>
+
+    <div class="mobile-menu">
+      <!-- Mobile dropdown for Home -->
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <div class="mobile-dropdown-toggle" id="mobileDropdownToggle">
+          <span><i class="fas fa-home"></i> Home</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="mobile-submenu">
+          <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+        </div>
+      </div>
+
+      <a href="soluation.html" class="mobile-item"><i class="fas fa-compass"></i> Solutions</a>
+      <a href="dashboard.html" class="mobile-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="services.html" class="mobile-item"><i class="fas fa-cogs"></i> Services</a>
+      <a href="about.html" class="mobile-item"><i class="fas fa-users"></i> About</a>
+      <a href="blog.html" class="mobile-item"><i class="fas fa-blog"></i> Blog</a>
+    </div>
+
+    <!-- Mobile login button (big and prominent) -->
+    <a href="login.html" class="mobile-login"><i class="fas fa-user"></i> Login</a>
+  </div>
+
+
+  <script>
+    (function() {
+      // ===== DESKTOP DROPDOWN =====
+      const desktopToggle = document.getElementById('desktopDropdownToggle');
+      const desktopMenu = document.getElementById('desktopDropdownMenu');
+      const desktopItem = document.getElementById('desktopDropdown');
+
+      if (desktopToggle && desktopMenu) {
+        desktopToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+          const chevron = desktopToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = desktopMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!desktopItem.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+            const chevron = desktopToggle.querySelector('.fa-chevron-down');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+
+      // ===== MOBILE DRAWER - FULL SCREEN =====
+      const hamburger = document.getElementById('hamburgerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('closeDrawer');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+      }
+      
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburger) hamburger.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
+
+      // ===== MOBILE DROPDOWN TOGGLE =====
+      const mobileToggle = document.getElementById('mobileDropdownToggle');
+      const mobileDropdown = document.getElementById('mobileDropdown');
+      
+      if (mobileToggle && mobileDropdown) {
+        mobileToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileDropdown.classList.toggle('open');
+          const chevron = mobileToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = mobileDropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+      }
+
+      // No search functionality - verified
+      console.log('100% cover mobile menu ready');
+    })();
+  </script>
+</body>
+</html>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dark Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        /* Content */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            color: white;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            margin: 0 auto;
+        }
+
+        /* Main Text */
+        .hero-text {
+            margin-bottom: 40px;
+        }
+
+        .hero-text .line1 {
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 {
+            font-size: 68px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 span {
+            display: block;
+        }
+
+        .hero-text .line3 {
+            font-size: 58px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #3b82f6;
+        }
+
+        .hero-text .line3 span {
+            display: block;
+        }
+
+        /* See how link */
+        .see-how {
+            margin-bottom: 60px;
+        }
+
+        .see-how a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .see-how a:hover {
+            gap: 15px;
+            border-bottom-color: white;
+        }
+
+        .see-how i {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+
+        /* Follow us */
+        .follow-us {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .follow-us span {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            color: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-text .line1 {
+                font-size: 40px;
+            }
+            .hero-text .line2 {
+                font-size: 55px;
+            }
+            .hero-text .line3 {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 30px;
+            }
+            .hero-text .line1 {
+                font-size: 32px;
+            }
+            .hero-text .line2 {
+                font-size: 42px;
+            }
+            .hero-text .line3 {
+                font-size: 38px;
+            }
+            .see-how a {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 0 20px;
+            }
+            .hero-text .line1 {
+                font-size: 26px;
+            }
+            .hero-text .line2 {
+                font-size: 34px;
+            }
+            .hero-text .line3 {
+                font-size: 30px;
+            }
+            .see-how {
+                margin-bottom: 40px;
+            }
+            .follow-us {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <!-- Video Background -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_3840_2160_30fps.mp4" type="video/mp4">
+                <!-- Fallback for browsers that don't support video -->
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Dark Overlay -->
+        <div class="overlay"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="line1">Stackly Payment Gateway –</div>
+                <div class="line2">
+                    <span>so you can</span>
+                </div>
+                <div class="line3">
+                    <span>Fast, Secure & Smart Payments.</span>
+                </div>
+            </div>
+
+            <div class="see-how">
+                <a href="404.html">See how <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="follow-us">
+                <span>Follow us</span>
+                <div class="social-icons">
+                    <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="404.html"><i class="fab fa-twitter"></i></a>
+                    <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+                    <a href="404.html"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
+
+<title>Trusted Brands</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#f5f5f5;
+}
+
+/* SECTION */
+
+.trusted-section{
+width:100%;
+padding:60px 20px;
+background:#f5f5f5;
+text-align:center;
+}
+
+/* TITLE */
+
+.trusted-section h2{
+font-size:22px;
+font-weight:500;
+color:#222;
+margin-bottom:40px;
+}
+
+/* LOGO ROW */
+
+.brand-logos{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:60px;
+flex-wrap:wrap;
+}
+
+/* LOGO STYLE */
+
+.brand-logos img{
+height:85px;
+object-fit:contain;
+opacity:0.8;
+transition:0.3s;
+}
+
+.brand-logos img:hover{
+opacity:1;
+transform:scale(1.08);
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.trusted-section h2{
+font-size:18px;
+}
+
+.brand-logos{
+gap:30px;
+}
+
+.brand-logos img{
+height:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="trusted-section">
+
+<h2>Trusted payment platform for <b>2,50,000+ Indian brands</b></h2>
+
+<div class="brand-logos">
+
+<img src="cred.webp" alt="Cred">
+
+<img src="zoomcar.webp" alt="Zoomcar">
+
+<img src="porter.webp" alt="Porter">
+
+<img src="fiter.webp" alt="Fittr">
+
+</div>
+
+</section>
+
+</body>
+</html>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#ffffff;
+}
+
+/* SECTION */
+
+.stackly-links{
+padding:80px 20px;
+max-width:1200px;
+margin:auto;
+}
+
+/* BLOCK */
+
+.link-row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:60px;
+margin-bottom:90px;
+}
+
+/* REVERSE */
+
+.reverse{
+flex-direction:row-reverse;
+}
+
+/* IMAGE */
+
+.link-img{
+flex:1;
+opacity:0;
+transform:translateX(-60px);
+transition:1s;
+}
+
+.link-img img{
+width:100%;
+border-radius:14px;
+}
+
+/* TEXT */
+
+.link-content{
+flex:1;
+opacity:0;
+transform:translateX(60px);
+transition:1s;
+}
+
+.link-content h3{
+font-size:28px;
+margin-bottom:15px;
+color:#111;
+}
+
+.link-content p{
+color:#555;
+line-height:1.6;
+margin-bottom:25px;
+}
+
+/* BUTTON */
+
+.arrow-btn{
+display:inline-flex;
+align-items:center;
+gap:10px;
+background:#0b5cff;
+color:white;
+padding:12px 22px;
+border-radius:25px;
+text-decoration:none;
+transition:.3s;
+}
+
+.arrow-btn:hover{
+background:#083fbe;
+}
+
+/* ICON */
+
+.arrow{
+font-size:16px;
+}
+
+/* REVEAL ACTIVE */
+
+.link-row.active .link-img{
+opacity:1;
+transform:translateX(0);
+}
+
+.link-row.active .link-content{
+opacity:1;
+transform:translateX(0);
+transition-delay:.3s;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.link-row{
+flex-direction:column;
+text-align:center;
+gap:30px;
+}
+
+.reverse{
+flex-direction:column;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<section class="stackly-links">
+
+
+<!-- 1 -->
+
+<div class="link-row reveal">
+
+<div class="link-img">
+<img src="fastticket.webp">
+</div>
+
+<div class="link-content">
+<h3>Create Payment Links</h3>
+<p>
+Generate secure payment links and share them via WhatsApp, email, or SMS.
+Customers can pay instantly without visiting your website.
+</p>
+
+<a href="404.html" class="arrow-btn">
+Explore <span class="arrow">→</span>
+</a>
+
+</div>
+
+</div>
+
+
+<!-- 2 -->
+
+<div class="link-row reverse reveal">
+
+<div class="link-img">
+<img src="hero2.webp">
+</div>
+
+<div class="link-content">
+<h3>Instant Collections</h3>
+<p>
+Collect payments faster using Stackly payment links with automatic
+reconciliation and real-time notifications.
+</p>
+
+<a href="404.html" class="arrow-btn">
+Explore <span class="arrow">→</span>
+</a>
+
+</div>
+
+</div>
+
+
+<!-- 3 -->
+
+<div class="link-row reveal">
+
+<div class="link-img">
+<img src="hero1.webp">
+</div>
+
+<div class="link-content">
+<h3>Invoice Payments</h3>
+<p>
+Send invoices to customers and allow them to pay directly online
+using secure Stackly payment links.
+</p>
+
+<a href="404.html" class="arrow-btn">
+Explore <span class="arrow">→</span>
+</a>
+
+</div>
+
+</div>
+
+
+<!-- 4 -->
+
+<div class="link-row reverse reveal">
+
+<div class="link-img">
+<img src="a10.webp">
+</div>
+
+<div class="link-content">
+<h3>Mobile Friendly Checkout</h3>
+<p>
+Optimized checkout experience for mobile devices ensuring
+higher payment success rates.
+</p>
+
+<a href="404.html" class="arrow-btn">
+Explore <span class="arrow">→</span>
+</a>
+
+</div>
+
+</div>
+
+
+<!-- 5 -->
+
+<div class="link-row reveal">
+
+<div class="link-img">
+<img src="a13.webp">
+</div>
+
+<div class="link-content">
+<h3>Real-time Payment Alerts</h3>
+<p>
+Get instant notifications whenever a payment is received
+so you never miss a successful transaction.
+</p>
+
+<a href="404.html" class="arrow-btn">
+Explore <span class="arrow">→</span>
+</a>
+
+</div>
+
+</div>
+
+
+<!-- 6 -->
+
+<div class="link-row reverse reveal">
+
+<div class="link-img">
+<img src="digital22.webp">
+</div>
+
+<div class="link-content">
+<h3>Secure Payment Processing</h3>
+<p>
+Stackly uses bank-grade security and encryption to ensure
+safe and reliable payment processing.
+</p>
+
+<a href="404.html" class="arrow-btn">
+Explore <span class="arrow">→</span>
+</a>
+
+</div>
+
+</div>
+
+
+</section>
+
+
+<script>
+
+/* SCROLL REVEAL */
+
+const reveals=document.querySelectorAll(".reveal");
+
+window.addEventListener("scroll",()=>{
+
+reveals.forEach((section)=>{
+
+const top=section.getBoundingClientRect().top;
+const windowHeight=window.innerHeight;
+
+if(top<windowHeight-100){
+section.classList.add("active");
+}
+
+});
+
+});
+
+</script>
+
+
+</body>
+</html>
+
+<style>
+
+/* REVEAL ANIMATION */
+
+.reveal{
+opacity:0;
+transform:translateY(60px);
+transition:1s;
+}
+
+.reveal.active{
+opacity:1;
+transform:translateY(0);
+}
+
+</style>
+
+
+</body>
+</html>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#f6f7f8;
+}
+
+/* HERO SECTION */
+
+#stacklyHeroSection{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:80px 8%;
+min-height:90vh;
+gap:60px;
+}
+
+/* LEFT VIDEO */
+
+#stacklyHeroVideo{
+flex:1;
+}
+
+#stacklyHeroVideo video{
+width:100%;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* RIGHT CONTENT */
+
+#stacklyHeroContent{
+flex:1;
+}
+
+#stacklyHeroTitle{
+font-size:38px;
+font-weight:600;
+color:#222;
+margin-bottom:20px;
+}
+
+#stacklyHeroText{
+font-size:17px;
+line-height:1.7;
+color:#555;
+margin-bottom:30px;
+max-width:480px;
+}
+
+/* BUTTON */
+
+#stacklyHeroBtn{
+background:#6c5fe0;
+color:#000;
+border:none;
+padding:14px 36px;
+border-radius:40px;
+font-size:16px;
+font-weight:500;
+cursor:pointer;
+transition:0.3s;
+}
+
+#stacklyHeroBtn:hover{
+background:#8fd046;
+}
+
+/* MOBILE VIEW */
+
+@media(max-width:900px){
+
+#stacklyHeroSection{
+flex-direction:column;
+text-align:center;
+padding:60px 20px;
+}
+
+#stacklyHeroContent{
+max-width:100%;
+}
+
+#stacklyHeroTitle{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<section id="stacklyHeroSection">
+
+<!-- LEFT VIDEO -->
+
+<div id="stacklyHeroVideo">
+
+<video autoplay muted loop playsinline>
+<source src="21844-322234054_medium.mp4" type="video/mp4">
+</video>
+
+</div>
+
+
+<!-- RIGHT CONTENT -->
+
+<div id="stacklyHeroContent">
+
+<h1 id="stacklyHeroTitle">
+Capture Every Payment with Stackly
+</h1>
+
+<p id="stacklyHeroText">
+Businesses lose billions in revenue due to drop-offs at checkout.  
+Stackly Payment Gateway ensures high success rates, instant retries,
+and seamless payment experiences so you never miss a sale.
+</p>
+
+<a href="404.html"><button id="stacklyHeroBtn">
+Let's Talk
+</button></a>
+
+</div>
+
+</section>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* ===== STACKLY TESTIMONIAL UNIQUE CSS ===== */
+
+#stkTestiSection{
+width:100%;
+padding:80px 20px;
+background:#f4f6fb;
+font-family:Poppins,sans-serif;
+}
+
+.stkTestiContainer{
+max-width:1100px;
+margin:auto;
+position:relative;
+}
+
+.stkTestiCard{
+display:grid;
+grid-template-columns:1.4fr 1fr;
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* LEFT CONTENT */
+
+.stkTestiContent{
+padding:45px;
+}
+
+.stkTestiStars{
+color:#2d6cdf;
+font-size:20px;
+margin-bottom:18px;
+}
+
+.stkTestiQuote{
+font-size:18px;
+line-height:1.7;
+color:#222;
+margin-bottom:25px;
+}
+
+.stkTestiAuthor{
+font-weight:600;
+font-size:16px;
+}
+
+.stkTestiRole{
+color:#777;
+margin-left:6px;
+}
+
+/* IMAGE */
+
+.stkTestiImage img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* BUTTONS */
+
+.stkTestiBtn{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:45px;
+height:45px;
+border-radius:50%;
+border:none;
+background:#fff;
+box-shadow:0 6px 20px rgba(0,0,0,0.15);
+cursor:pointer;
+font-size:20px;
+}
+
+#stkTestiPrev{
+left:-60px;
+}
+
+#stkTestiNext{
+right:-60px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.stkTestiCard{
+grid-template-columns:1fr;
+}
+
+.stkTestiContent{
+padding:30px;
+}
+
+.stkTestiQuote{
+font-size:16px;
+}
+
+.stkTestiBtn{
+display:none;
+}
+
+}
+/* MOBILE FIX */
+
+@media(max-width:768px){
+
+.stkTestiCard{
+grid-template-columns:1fr;
+}
+
+.stkTestiContent{
+padding:25px;
+}
+
+.stkTestiQuote{
+font-size:16px;
+}
+
+/* BUTTON STYLE */
+
+.stkTestiBtn{
+display:flex;
+align-items:center;
+justify-content:center;
+top:auto;
+bottom:-35px;
+transform:none;
+width:42px;
+height:42px;
+font-size:18px;
+}
+
+/* LEFT BUTTON */
+
+#stkTestiPrev{
+left:30%;
+}
+
+/* RIGHT BUTTON */
+
+#stkTestiNext{
+right:30%;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<section id="stkTestiSection">
+
+<div class="stkTestiContainer">
+
+<button class="stkTestiBtn" id="stkTestiPrev">❮</button>
+
+<div class="stkTestiCard">
+
+<div class="stkTestiContent">
+
+<div class="stkTestiStars">★★★★★</div>
+
+<p class="stkTestiQuote" id="stkQuote">
+Stackly provides smooth onboarding and powerful payment analytics dashboard for merchants.
+</p>
+
+<div>
+<span class="stkTestiAuthor" id="stkAuthor">Ananya Mehta</span>
+<span class="stkTestiRole" id="stkRole">| Founder, ShopEase</span>
+</div>
+
+</div>
+
+<div class="stkTestiImage">
+<img id="stkImage" src="hr24.webp">
+</div>
+
+</div>
+
+<button class="stkTestiBtn" id="stkTestiNext">❯</button>
+
+</div>
+
+</section>
+
+<script>
+
+/* ===== UNIQUE STACKLY TESTIMONIAL JS ===== */
+
+const stkTestimonials = [
+
+{
+quote:"Stackly provides smooth onboarding and powerful payment analytics dashboard for merchants.",
+author:"Ananya Mehta",
+role:"| Founder, ShopEase",
+image:"hr1.webp"
+},
+
+{
+quote:"Integration with Stackly payment gateway was extremely simple and improved our transaction success rate.",
+author:"Rahul Kapoor",
+role:"| CEO, UrbanCart",
+image:"hr3.webp"
+},
+
+{
+quote:"Stackly dashboard gives real-time revenue insights and automated reconciliation for our business.",
+author:"Vikram Patel",
+role:"| CTO, PayWave",
+image:"hr13.webp"
+}
+
+];
+
+let stkIndex = 0;
+
+function stkShowTestimonial(){
+
+document.getElementById("stkQuote").innerText = stkTestimonials[stkIndex].quote;
+document.getElementById("stkAuthor").innerText = stkTestimonials[stkIndex].author;
+document.getElementById("stkRole").innerText = stkTestimonials[stkIndex].role;
+document.getElementById("stkImage").src = stkTestimonials[stkIndex].image;
+
+}
+
+document.getElementById("stkTestiNext").onclick = function(){
+
+stkIndex++;
+if(stkIndex >= stkTestimonials.length){
+stkIndex = 0;
+}
+
+stkShowTestimonial();
+
+}
+
+document.getElementById("stkTestiPrev").onclick = function(){
+
+stkIndex--;
+if(stkIndex < 0){
+stkIndex = stkTestimonials.length - 1;
+}
+
+stkShowTestimonial();
+
+}
+
+</script>
+
+</body>
+</html>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dark Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        /* Content */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            color: white;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            margin: 0 auto;
+        }
+
+        /* Main Text */
+        .hero-text {
+            margin-bottom: 40px;
+        }
+
+        .hero-text .line1 {
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 {
+            font-size: 68px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 span {
+            display: block;
+        }
+
+        .hero-text .line3 {
+            font-size: 58px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #3b82f6;
+        }
+
+        .hero-text .line3 span {
+            display: block;
+        }
+
+        /* See how link */
+        .see-how {
+            margin-bottom: 60px;
+        }
+
+        .see-how a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .see-how a:hover {
+            gap: 15px;
+            border-bottom-color: white;
+        }
+
+        .see-how i {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+
+        /* Follow us */
+        .follow-us {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .follow-us span {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            color: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-text .line1 {
+                font-size: 40px;
+            }
+            .hero-text .line2 {
+                font-size: 55px;
+            }
+            .hero-text .line3 {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 30px;
+            }
+            .hero-text .line1 {
+                font-size: 32px;
+            }
+            .hero-text .line2 {
+                font-size: 42px;
+            }
+            .hero-text .line3 {
+                font-size: 38px;
+            }
+            .see-how a {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 0 20px;
+            }
+            .hero-text .line1 {
+                font-size: 26px;
+            }
+            .hero-text .line2 {
+                font-size: 34px;
+            }
+            .hero-text .line3 {
+                font-size: 30px;
+            }
+            .see-how {
+                margin-bottom: 40px;
+            }
+            .follow-us {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <!-- Video Background -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="8345037-uhd_2160_3840_25fps (3).mp4" type="video/mp4">
+                <!-- Fallback for browsers that don't support video -->
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Dark Overlay -->
+        <div class="overlay"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="line1">Stackly Payment Gateway –</div>
+                <div class="line2">
+                    <span>so you can</span>
+                </div>
+                <div class="line3">
+                    <span>Fast, Secure & Smart Payments.</span>
+                </div>
+            </div>
+
+            <div class="see-how">
+                <a href="404.html">Contact Us <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="follow-us">
+                <span>Follow us</span>
+                <div class="social-icons">
+                    <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="404.html"><i class="fab fa-twitter"></i></a>
+                    <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+                    <a href="404.html"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
+</body>
+</html>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* ===== PREMIUM PAYMENT GATEWAY FOOTER ===== */
+    .footer {
+      background: #0f1a2b;  /* deep black-blue */
+      color: #e6ecf5;
+      border-top: 4px solid #2b6cff;
+      position: relative;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(0,0,0,0.3);
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #2b6cff, #ffffff, #2b6cff);
+      opacity: 0.5;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+    }
+
+    /* Footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #2b6cff;
+      border-radius: 2px;
+    }
+
+    /* Brand column with logo image */
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-logo img {
+      height: auto;
+      width: 150px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* makes white logo - remove if logo is colored */
+    }
+
+    .footer-about {
+      color: #b0c6e0;
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+
+    /* Social media icons - 4 items */
+    .footer-social {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1f2f44;
+      color: #2b6cff;
+      font-size: 1.3rem;
+      transition: 0.25s;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+
+    .footer-social a:hover {
+      background: #2b6cff;
+      color: white;
+      transform: translateY(-5px);
+      border-color: white;
+    }
+
+    /* Links columns */
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul li a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .footer-col ul li a i {
+      color: #2b6cff;
+      font-size: 0.8rem;
+      width: 18px;
+    }
+
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* Contact column */
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #c9d9f0;
+    }
+
+    .contact-item i {
+      width: 24px;
+      color: #2b6cff;
+      font-size: 1.1rem;
+    }
+
+    .payment-badges {
+      display: flex;
+      gap: 10px;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #1f2f44;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      border: 1px solid #2b6cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge i {
+      color: #2b6cff;
+    }
+
+    /* Newsletter - IMPROVED MOBILE VERSION */
+    .newsletter {
+      margin-top: 1.5rem;
+    }
+
+    .newsletter h4 {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .newsletter-box {
+      display: flex;
+      background: #1a2538;
+      border-radius: 60px;
+      overflow: hidden;
+      border: 2px solid #2b6cff;
+      width: 100%;
+    }
+
+    .newsletter-box input {
+      flex: 1;
+      min-width: 0; /* prevents overflow on mobile */
+      padding: 0.9rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .newsletter-box input::placeholder {
+      color: #8a9fc0;
+    }
+
+    .newsletter-box button {
+      background: #2b6cff;
+      border: none;
+      padding: 0 1.2rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      border-left: 2px solid white;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: auto;
+    }
+
+    .newsletter-box button i {
+      font-size: 0.9rem;
+    }
+
+    .newsletter-box button:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+      background: #0a1320;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1f3a70;
+      color: #9bb0d0;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom .legal-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom .legal-links a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .legal-links a:hover {
+      color: #2b6cff;
+    }
+
+    .footer-bottom .payment-icons i {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      color: #5f7d9e;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .payment-icons i:hover {
+      color: #2b6cff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem 1.5rem;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .footer-bottom .legal-links {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .footer-bottom .payment-icons {
+        margin-top: 0.5rem;
+      }
+      
+      .footer-bottom .payment-icons i {
+        margin: 0 0.5rem;
+      }
+      
+      /* Improved mobile newsletter */
+      .newsletter-box {
+        flex-direction: column;
+        border-radius: 30px;
+      }
+      
+      .newsletter-box input {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 2px solid #2b6cff;
+      }
+      
+      .newsletter-box button {
+        width: 100%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 2px solid white;
+        justify-content: center;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 380px) {
+      .footer-social {
+        gap: 10px;
+      }
+      
+      .footer-social a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      
+      .badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PREMIUM FOOTER - PAYMENT GATEWAY STYLE -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Column 1: Brand with logo image -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <!-- Logo image - replace src with your actual logo -->
+          <img src="stacklylogo (3).webp" alt="Stackly Pay" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span style="display:none; font-size:1.8rem; font-weight:700; color:white;">STACKLY<span style="color:#2b6cff;">pay</span></span>
+        </div>
+        <p class="footer-about">
+          Enterprise-grade payment gateway processing billions in transactions. Secure, scalable, and built for growth.
+        </p>
+        <!-- 4 SOCIAL MEDIA ICONS -->
+        <div class="footer-social">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+         
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+          <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <!-- Column 2: Solutions (all links to 404) -->
+      <div class="footer-col">
+        <h3>Solutions</h3>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="soluation.html"><i class="fas fa-chevron-right"></i> Soluation</a></li>
+          <li><a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+          <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+          <li><a href="about.html"><i class="fas fa-chevron-right"></i> About</a></li>
+          <li><a href="blog.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Company (all links to 404) -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Press</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact & Newsletter with validation -->
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <div class="contact-item">
+          <i class="fas fa-map-pin"></i>
+          <span>100 Financial District, Bengaluru, India 571426</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>+91 9568759723</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>hello@stacklypay.com</span>
+        </div>
+
+        <!-- Payment badges -->
+        <div class="payment-badges">
+          <span class="badge"><i class="fab fa-cc-visa"></i> Visa</span>
+          <span class="badge"><i class="fab fa-cc-mastercard"></i> MC</span>
+          <span class="badge"><i class="fab fa-cc-amex"></i> Amex</span>
+        </div>
+
+        <!-- Newsletter with email validation -->
+        <div class="newsletter">
+          <h4>Stay updated</h4>
+          <div class="newsletter-box">
+            <input type="email" placeholder="your@email.com" id="newsletterEmail">
+            <button id="subscribeBtn"><i class="fas fa-paper-plane"></i> Subscribe</button>
+          </div>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom (all links to 404) -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2026 Stackly Pay. All rights reserved.
+      </div>
+      <div class="legal-links">
+        <a href="404.html">Privacy Policy</a>
+        <a href="404.html">Terms of Service</a>
+        <a href="404.html">Cookie Policy</a>
+        <a href="404.html">GDPR</a>
+      </div>
+      <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-amex"></i>
+        <i class="fab fa-cc-paypal"></i>
+        <i class="fab fa-cc-stripe"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Email validation and redirect to 404
+      const emailInput = document.getElementById('newsletterEmail');
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const emailError = document.getElementById('emailError');
+
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      function handleSubscribe() {
+        const email = emailInput.value.trim();
+        
+        if (email === '' || !validateEmail(email)) {
+          emailError.classList.add('show');
+        } else {
+          emailError.classList.remove('show');
+          // Redirect to 404 page
+          window.location.href = '404.html';
+        }
+      }
+
+      if (subscribeBtn && emailInput) {
+        subscribeBtn.addEventListener('click', handleSubscribe);
+        
+        emailInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            handleSubscribe();
+          }
+        });
+
+        // Clear error when user starts typing
+        emailInput.addEventListener('input', () => {
+          emailError.classList.remove('show');
+        });
+      }
+
+      // All footer links already point to 404.html
+    })();
+  </script>
+</body>
+</html>

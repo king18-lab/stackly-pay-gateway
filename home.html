@@ -1,0 +1,2622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Stackly • 100% cover mobile menu (no search)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      color: #1e1e2f;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: #0f1a2b;
+      border-bottom: 4px solid #2b6cff;
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    .logo img {
+      height: auto;
+      width: 140px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Desktop menu - hidden on mobile */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 0.3rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e6ecf5;
+      font-weight: 500;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .nav-link i {
+      color: #2b6cff;
+      font-size: 1rem;
+    }
+
+    .nav-link:hover {
+      background: rgba(43, 108, 255, 0.15);
+      border-color: #2b6cff;
+      color: white;
+    }
+
+    /* Dropdown desktop */
+    .nav-item {
+      position: relative;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #0f1a2b;
+      min-width: 220px;
+      border-radius: 20px;
+      padding: 0.6rem 0;
+      box-shadow: 0 25px 35px -12px #000000cc, 0 0 0 1px #2b6cff;
+      border: 1px solid #2b6cff;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: 0.25s ease;
+      z-index: 100;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(6px);
+    }
+
+    .dropdown-content a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d3e0ff;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .dropdown-content a i {
+      width: 22px;
+      color: #2b6cff;
+    }
+
+    .dropdown-content a:hover {
+      background: #1a2f4a;
+      border-left-color: #2b6cff;
+      color: white;
+    }
+
+    /* Desktop right side - ONLY LOGIN (search removed) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid #2b6cff;
+      border-radius: 60px;
+      padding: 0.6rem 1.5rem;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .login-btn i {
+      font-size: 1rem;
+    }
+
+    .login-btn:hover {
+      background: #2b6cff;
+      color: white;
+      border-color: white;
+    }
+
+    /* Hamburger - perfect for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      background: #1f2b3f;
+      border-radius: 16px;
+      border: 2px solid #2b6cff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .hamburger:hover {
+      background: #2b6cff;
+    }
+    
+    .hamburger span {
+      width: 26px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    /* ===== 100% COVER MOBILE DRAWER (FULL SCREEN) ===== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 2999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;        /* 100% width */
+      height: 100vh;       /* 100% height */
+      background: #0a1322;
+      z-index: 3000;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      border-right: none;   /* no border, full coverage */
+      box-shadow: none;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #1f3a70;
+      padding-bottom: 1.2rem;
+    }
+
+    .drawer-logo img {
+      height: auto;
+      width: 150px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .close-drawer {
+      background: #1f3a70;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: white;
+      cursor: pointer;
+      border: 2px solid #2b6cff;
+      transition: 0.2s;
+    }
+    
+    .close-drawer:hover {
+      background: #2b6cff;
+    }
+
+    .mobile-menu {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .mobile-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: #eef4ff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .mobile-item i {
+      color: #2b6cff;
+      width: 28px;
+      font-size: 1.3rem;
+    }
+    
+    .mobile-item:hover {
+      background: #1f3a70;
+      transform: translateX(8px);
+    }
+
+    .mobile-dropdown {
+      margin-bottom: 0;
+    }
+    
+    .mobile-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+    
+    .mobile-dropdown-toggle:hover {
+      background: #1f3a70;
+    }
+    
+    .mobile-submenu {
+      display: none;
+      margin-left: 1.2rem;
+      margin-top: 10px;
+      padding-left: 1rem;
+      border-left: 4px solid #2b6cff;
+    }
+    
+    .mobile-submenu a {
+      display: block;
+      padding: 1rem 1.5rem;
+      background: #0e1a2a;
+      border-radius: 50px;
+      margin: 8px 0;
+      color: #b9d0ff;
+      text-decoration: none;
+      border-left: 4px solid transparent;
+      font-size: 1.1rem;
+    }
+    
+    .mobile-submenu a i {
+      margin-right: 12px;
+      color: #2b6cff;
+      width: 24px;
+    }
+    
+    .mobile-submenu a:hover {
+      background: #1f2f4a;
+      border-left-color: #2b6cff;
+    }
+    
+    .mobile-dropdown.open .mobile-submenu {
+      display: block;
+    }
+
+    /* Mobile login button - bigger for full screen */
+    .mobile-login {
+      background: #2b6cff;
+      border: none;
+      border-radius: 60px;
+      padding: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 2rem;
+      text-decoration: none;
+      border: 2px solid white;
+      transition: 0.2s;
+    }
+    
+    .mobile-login:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+    
+    .mobile-login i {
+      color: #0f1a2b;
+      font-size: 1.3rem;
+    }
+
+    /* RESPONSIVE: show hamburger on mobile */
+    @media screen and (max-width: 1024px) {
+      .nav-menu, .nav-actions {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .navbar {
+        padding: 0.3rem 1rem;
+      }
+    }
+
+    /* Small phones adjustments */
+    @media screen and (max-width: 400px) {
+      .logo img {
+        width: 120px;
+      }
+      .hamburger {
+        width: 44px;
+        height: 44px;
+      }
+      .mobile-drawer {
+        padding: 1.5rem 1rem;
+      }
+      .mobile-item, .mobile-dropdown-toggle {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.1rem;
+      }
+      .close-drawer {
+        width: 48px;
+        height: 48px;
+        font-size: 2rem;
+      }
+    }
+
+    /* Demo content */
+    .demo-content {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 40px;
+      border: 2px solid #2b6cff;
+      text-align: center;
+    }
+    .demo-content h1 {
+      color: #0f1a2b;
+      margin-bottom: 1rem;
+    }
+    .cover-note {
+      background: #2b6cff20;
+      padding: 1.2rem;
+      border-radius: 30px;
+      color: #0f1a2b;
+      margin-top: 2rem;
+      border: 2px dashed #2b6cff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR (DESKTOP + MOBILE HAMBURGER) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="stacklylogo (3).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- Desktop menu (hidden on mobile) -->
+      <ul class="nav-menu">
+        <li class="nav-item" id="desktopDropdown">
+          <a class="nav-link" id="desktopDropdownToggle">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="dropdown-content" id="desktopDropdownMenu">
+            <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+            <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+          </div>
+        </li>
+        <li><a href="products.html" class="nav-link"><i class="fas fa-compass"></i> Products</a></li>
+        <li><a href="careers.html" class="nav-link"><i class="fas fa-chart-pie"></i> Careers</a></li>
+        <li><a href="contact.html" class="nav-link"><i class="fas fa-cogs"></i> Contact</a></li>
+        
+      </ul>
+
+      <!-- Desktop actions: ONLY LOGIN (search removed) -->
+      <div class="nav-actions">
+        <a href="log1.html" class="login-btn"><i class="fas fa-user"></i> Login</a>
+      </div>
+
+      <!-- Hamburger for mobile -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay (semi-transparent) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  
+  <!-- 100% COVER MOBILE DRAWER - FULL SCREEN -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="stacklylogo (3).webp" alt="logo">
+      </div>
+      <div class="close-drawer" id="closeDrawer"><i class="fas fa-times"></i></div>
+    </div>
+
+    <div class="mobile-menu">
+      <!-- Mobile dropdown for Home -->
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <div class="mobile-dropdown-toggle" id="mobileDropdownToggle">
+          <span><i class="fas fa-home"></i> Home</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="mobile-submenu">
+          <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+        </div>
+      </div>
+
+      <a href="products.html" class="mobile-item"><i class="fas fa-compass"></i> Products</a>
+      <a href="careers.html" class="mobile-item"><i class="fas fa-chart-pie"></i>Careers</a>
+      <a href="contact.html" class="mobile-item"><i class="fas fa-cogs"></i> Contact</a>
+      
+    </div>
+
+    <!-- Mobile login button (big and prominent) -->
+    <a href="log1.html" class="mobile-login"><i class="fas fa-user"></i> Login</a>
+  </div>
+
+
+  <script>
+    (function() {
+      // ===== DESKTOP DROPDOWN =====
+      const desktopToggle = document.getElementById('desktopDropdownToggle');
+      const desktopMenu = document.getElementById('desktopDropdownMenu');
+      const desktopItem = document.getElementById('desktopDropdown');
+
+      if (desktopToggle && desktopMenu) {
+        desktopToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+          const chevron = desktopToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = desktopMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!desktopItem.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+            const chevron = desktopToggle.querySelector('.fa-chevron-down');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+
+      // ===== MOBILE DRAWER - FULL SCREEN =====
+      const hamburger = document.getElementById('hamburgerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('closeDrawer');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+      }
+      
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburger) hamburger.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
+
+      // ===== MOBILE DROPDOWN TOGGLE =====
+      const mobileToggle = document.getElementById('mobileDropdownToggle');
+      const mobileDropdown = document.getElementById('mobileDropdown');
+      
+      if (mobileToggle && mobileDropdown) {
+        mobileToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileDropdown.classList.toggle('open');
+          const chevron = mobileToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = mobileDropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+      }
+
+      // No search functionality - verified
+      console.log('100% cover mobile menu ready');
+    })();
+  </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dark Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        /* Content */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            color: white;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            margin: 0 auto;
+        }
+
+        /* Main Text */
+        .hero-text {
+            margin-bottom: 40px;
+        }
+
+        .hero-text .line1 {
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 {
+            font-size: 68px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 span {
+            display: block;
+        }
+
+        .hero-text .line3 {
+            font-size: 58px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #3b82f6;
+        }
+
+        .hero-text .line3 span {
+            display: block;
+        }
+
+        /* See how link */
+        .see-how {
+            margin-bottom: 60px;
+        }
+
+        .see-how a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .see-how a:hover {
+            gap: 15px;
+            border-bottom-color: white;
+        }
+
+        .see-how i {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+
+        /* Follow us */
+        .follow-us {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .follow-us span {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            color: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-text .line1 {
+                font-size: 40px;
+            }
+            .hero-text .line2 {
+                font-size: 55px;
+            }
+            .hero-text .line3 {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 30px;
+            }
+            .hero-text .line1 {
+                font-size: 32px;
+            }
+            .hero-text .line2 {
+                font-size: 42px;
+            }
+            .hero-text .line3 {
+                font-size: 38px;
+            }
+            .see-how a {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 0 20px;
+            }
+            .hero-text .line1 {
+                font-size: 26px;
+            }
+            .hero-text .line2 {
+                font-size: 34px;
+            }
+            .hero-text .line3 {
+                font-size: 30px;
+            }
+            .see-how {
+                margin-bottom: 40px;
+            }
+            .follow-us {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <!-- Video Background -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="209409_medium (1).mp4" type="video/mp4">
+                <!-- Fallback for browsers that don't support video -->
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Dark Overlay -->
+        <div class="overlay"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="line1">Stackly Payment Gateway –</div>
+                <div class="line2">
+                    <span>so you can</span>
+                </div>
+                <div class="line3">
+                    <span>Fast, Secure & Smart Payments.</span>
+                </div>
+            </div>
+
+            <div class="see-how">
+                <a href="4041.html">See how <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="follow-us">
+                <span>Follow us</span>
+                <div class="social-icons">
+                    <a href="4041.html"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="4041.html"><i class="fab fa-twitter"></i></a>
+                    <a href="4041.html"><i class="fab fa-facebook-f"></i></a>
+                    <a href="4041.html"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+<title>Stackly Payment Services</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+/* SECTION */
+
+#stkSrvSection{
+padding:80px 20px;
+background:#f5f7fb;
+}
+
+.stkSrvContainer{
+max-width:1200px;
+margin:auto;
+}
+
+.stkSrvTitle{
+font-size:38px;
+margin-bottom:50px;
+font-weight:600;
+}
+
+/* GRID */
+
+.stkSrvGrid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:30px;
+}
+
+/* CARD */
+
+.stkSrvCard{
+display:grid;
+grid-template-columns:1fr 1fr;
+background:white;
+border-radius:12px;
+overflow:hidden;
+border:1px solid #e1e7f0;
+transition:0.3s;
+}
+
+.stkSrvCard:hover{
+transform:translateY(-6px);
+box-shadow:0 15px 35px rgba(0,0,0,0.08);
+}
+
+/* CONTENT */
+
+.stkSrvContent{
+padding:28px;
+}
+
+.stkSrvTag{
+color:#2b6cf6;
+font-size:13px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.stkSrvHeading{
+font-size:18px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.stkSrvText{
+font-size:14px;
+color:#666;
+line-height:1.6;
+margin-bottom:18px;
+}
+
+.stkSrvBtn{
+color:#2b6cf6;
+font-weight:500;
+text-decoration:none;
+}
+
+/* IMAGE */
+
+.stkSrvImg img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* SCROLL REVEAL ANIMATION */
+
+.stkReveal{
+opacity:0;
+transform:translateY(60px);
+transition:all 0.8s ease;
+}
+
+.stkRevealLeft{
+opacity:0;
+transform:translateX(-80px);
+transition:all 0.8s ease;
+}
+
+.stkRevealRight{
+opacity:0;
+transform:translateX(80px);
+transition:all 0.8s ease;
+}
+
+.stkActive{
+opacity:1;
+transform:translate(0);
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.stkSrvGrid{
+grid-template-columns:1fr;
+}
+
+.stkSrvCard{
+grid-template-columns:1fr;
+}
+
+.stkSrvImg img{
+height:220px;
+}
+
+.stkSrvTitle{
+text-align:center;
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<section id="stkSrvSection">
+
+<div class="stkSrvContainer">
+
+<h2 class="stkSrvTitle">Discover Stackly Payment Solutions</h2>
+
+<div class="stkSrvGrid">
+
+
+<!-- SERVICE 1 -->
+
+<div class="stkSrvCard stkRevealLeft">
+
+<div class="stkSrvContent">
+
+<div class="stkSrvTag">Payment Gateway</div>
+
+<div class="stkSrvHeading">
+Accept Online Payments Instantly
+</div>
+
+<div class="stkSrvText">
+Accept payments from UPI, cards, wallets and netbanking using Stackly secure payment gateway.
+</div>
+
+<a href="4041.html" class="stkSrvBtn">
+Read more →
+</a>
+
+</div>
+
+<div class="stkSrvImg">
+<img src="digital42.webp">
+</div>
+
+</div>
+
+
+<!-- SERVICE 2 -->
+
+<div class="stkSrvCard stkReveal">
+
+<div class="stkSrvContent">
+
+<div class="stkSrvTag">Smart Checkout</div>
+
+<div class="stkSrvHeading">
+Optimized Checkout Experience
+</div>
+
+<div class="stkSrvText">
+Increase conversion with a lightning fast checkout built for modern e-commerce businesses.
+</div>
+
+<a href="4041.html" class="stkSrvBtn">
+Read more →
+</a>
+
+</div>
+
+<div class="stkSrvImg">
+<img src="digital40.webp">
+</div>
+
+</div>
+
+
+<!-- SERVICE 3 -->
+
+<div class="stkSrvCard stkReveal">
+
+<div class="stkSrvContent">
+
+<div class="stkSrvTag">Fraud Protection</div>
+
+<div class="stkSrvHeading">
+AI Powered Fraud Detection
+</div>
+
+<div class="stkSrvText">
+Protect your payments using advanced AI fraud detection and secure payment authentication.
+</div>
+
+<a href="4041.html" class="stkSrvBtn">
+Read more →
+</a>
+
+</div>
+
+<div class="stkSrvImg">
+<img src="digital39.webp">
+</div>
+
+</div>
+
+
+<!-- SERVICE 4 -->
+
+<div class="stkSrvCard stkRevealRight">
+
+<div class="stkSrvContent">
+
+<div class="stkSrvTag">Analytics Dashboard</div>
+
+<div class="stkSrvHeading">
+Track Payments & Revenue
+</div>
+
+<div class="stkSrvText">
+Monitor real time revenue, transactions and payment insights using Stackly analytics dashboard.
+</div>
+
+<a href="4041.html" class="stkSrvBtn">
+Read more →
+</a>
+
+</div>
+
+<div class="stkSrvImg">
+<img src="digital38.webp">
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<script>
+
+/* SCROLL REVEAL */
+
+function stkRevealAnimation(){
+
+const reveals = document.querySelectorAll(".stkReveal, .stkRevealLeft, .stkRevealRight");
+
+for(let i=0;i<reveals.length;i++){
+
+let windowHeight = window.innerHeight;
+let elementTop = reveals[i].getBoundingClientRect().top;
+let elementVisible = 100;
+
+if(elementTop < windowHeight - elementVisible){
+
+reveals[i].classList.add("stkActive");
+
+}
+
+}
+
+}
+
+window.addEventListener("scroll", stkRevealAnimation);
+
+</script>
+
+<title>Stackly Trust Section</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+/* SECTION BACKGROUND */
+
+#stkTrustSection{
+background:#0f3b88;
+padding:80px 20px;
+}
+
+/* CARD */
+
+.stkTrustCard{
+max-width:1100px;
+margin:auto;
+background:white;
+border-radius:25px;
+overflow:hidden;
+display:grid;
+grid-template-columns:1fr 1fr;
+align-items:center;
+}
+
+/* LEFT CONTENT */
+
+.stkTrustContent{
+padding:60px;
+}
+
+.stkTrustTitle{
+font-size:40px;
+font-weight:700;
+color:#0f2f6b;
+line-height:1.2;
+margin-bottom:20px;
+}
+
+.stkTrustText{
+color:#333;
+margin-bottom:25px;
+font-weight:500;
+}
+
+/* BUTTON */
+
+.stkTrustBtn{
+background:#0f3b88;
+color:white;
+border:none;
+padding:14px 30px;
+border-radius:30px;
+font-size:15px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.stkTrustBtn:hover{
+background:#0c2e6c;
+}
+
+/* IMAGE */
+
+.stkTrustImage img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.stkTrustCard{
+grid-template-columns:1fr;
+}
+
+.stkTrustContent{
+padding:35px;
+text-align:center;
+}
+
+.stkTrustTitle{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<section id="stkTrustSection">
+
+<div class="stkTrustCard">
+
+<!-- LEFT -->
+
+<div class="stkTrustContent">
+
+<h2 class="stkTrustTitle">
+Global trust.<br>
+Now at local prices.
+</h2>
+
+<p class="stkTrustText">
+Effective fees as low as 1.9%.
+</p>
+
+<a href="4041.html">
+<button class="stkTrustBtn">
+Sign Up
+</button>
+</a>
+
+</div>
+
+
+<!-- RIGHT IMAGE -->
+
+<div class="stkTrustImage">
+
+<img src="digital22.webp">
+
+</div>
+
+</div>
+
+</section>
+
+
+</body>
+</html>
+
+<title>Stackly Payment Features</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+/* SECTION */
+
+#stkPaySection{
+padding:80px 20px;
+background:#f5f7fb;
+}
+
+.stkPayContainer{
+max-width:1100px;
+margin:auto;
+display:grid;
+grid-template-columns:1fr 1fr;
+align-items:center;
+gap:60px;
+}
+
+/* IMAGE AREA */
+
+.stkPayImageArea{
+position:relative;
+display:flex;
+justify-content:center;
+}
+
+.stkPayImageBox{
+background:#d9d8eb;
+padding:40px;
+border-radius:25px;
+}
+
+.stkPayImageBox img{
+width:240px;
+cursor:pointer;
+}
+
+/* NAV BUTTONS */
+
+.stkPayNav{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+background:white;
+border:none;
+width:40px;
+height:40px;
+border-radius:50%;
+cursor:pointer;
+box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+
+#stkPrev{
+left:-20px;
+}
+
+#stkNext{
+right:-20px;
+}
+
+/* CONTENT */
+
+.stkPayTitle{
+font-size:36px;
+margin-bottom:15px;
+}
+
+.stkPayText{
+color:#555;
+margin-bottom:20px;
+line-height:1.6;
+}
+
+/* BUTTON */
+
+.stkPayBtn{
+background:#6b35d9;
+color:white;
+border:none;
+padding:14px 28px;
+border-radius:8px;
+font-size:15px;
+cursor:pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.stkPayContainer{
+grid-template-columns:1fr;
+text-align:center;
+}
+
+.stkPayImageArea{
+margin-bottom:30px;
+}
+
+.stkPayTitle{
+font-size:28px;
+}
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<section id="stkPaySection">
+
+<div class="stkPayContainer">
+
+
+<!-- IMAGE SLIDER -->
+
+<div class="stkPayImageArea">
+
+<button class="stkPayNav" id="stkPrev">❮</button>
+
+<div class="stkPayImageBox">
+
+<a href="4041.html">
+<img id="stkPayImg"
+src="stacklylogo (3).webp">
+</a>
+
+</div>
+
+<button class="stkPayNav" id="stkNext">❯</button>
+
+</div>
+
+
+<!-- CONTENT -->
+
+<div>
+
+<h2 class="stkPayTitle" id="stkPayTitle">
+UPI Payments
+</h2>
+
+<p class="stkPayText" id="stkPayText">
+
+In-house UPI switch to boost payment success rate and speed.
+Accept payments via static and dynamic QR with real-time processing.
+
+</p>
+
+<a href="4041.html">
+<button class="stkPayBtn">
+Get Started Now →
+</button>
+</a>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<script>
+
+/* PAYMENT FEATURE SLIDER */
+
+const stkFeatures = [
+
+{
+title:"UPI Payments",
+text:"Accept instant UPI payments using QR codes and intent flows with high success rates.",
+img:"upi2.webp"
+},
+
+{
+title:"Credit & Debit Cards",
+text:"Accept Visa, Mastercard, RuPay and international cards with secure authentication.",
+img:"cards.webp"
+},
+
+{
+title:"NetBanking",
+text:"Enable secure netbanking payments from major Indian banks with fast settlements.",
+img:"hero3.webp"
+},
+
+{
+title:"Wallet Payments",
+text:"Accept wallet payments from Paytm, PhonePe and other digital wallets.",
+img:"fastticket.webp"
+}
+
+];
+
+let stkIndex = 0;
+
+const img = document.getElementById("stkPayImg");
+const title = document.getElementById("stkPayTitle");
+const text = document.getElementById("stkPayText");
+
+document.getElementById("stkNext").onclick = function(){
+
+stkIndex++;
+if(stkIndex >= stkFeatures.length){
+stkIndex = 0;
+}
+
+updateFeature();
+
+}
+
+document.getElementById("stkPrev").onclick = function(){
+
+stkIndex--;
+if(stkIndex < 0){
+stkIndex = stkFeatures.length - 1;
+}
+
+updateFeature();
+
+}
+
+function updateFeature(){
+
+img.src = stkFeatures[stkIndex].img;
+title.innerText = stkFeatures[stkIndex].title;
+text.innerText = stkFeatures[stkIndex].text;
+
+}
+
+</script>
+
+
+<title>Stackly Digital Core</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+/* SECTION */
+
+#stkCoreSection{
+background:#0300b3;
+padding:80px 20px;
+}
+
+/* CONTAINER */
+
+.stkCoreContainer{
+max-width:1200px;
+margin:auto;
+display:grid;
+grid-template-columns:1fr 1fr;
+align-items:center;
+gap:60px;
+}
+
+/* LEFT TEXT */
+
+.stkCoreTitle{
+color:white;
+font-size:48px;
+font-weight:700;
+margin-bottom:20px;
+}
+
+.stkCoreText{
+color:white;
+font-size:18px;
+margin-bottom:35px;
+}
+
+/* BUTTON */
+
+.stkCoreBtn{
+border:2px solid white;
+background:transparent;
+color:white;
+padding:14px 30px;
+font-size:14px;
+letter-spacing:1px;
+cursor:pointer;
+transition:.3s;
+}
+
+.stkCoreBtn:hover{
+background:white;
+color:#b36a00;
+}
+
+/* VIDEO */
+
+.stkCoreVideoBox{
+position:relative;
+}
+
+.stkCoreVideo{
+width:100%;
+border-radius:6px;
+}
+
+/* PLAY BUTTON */
+
+.stkPlayBtn{
+position:absolute;
+bottom:15px;
+left:15px;
+background:rgba(0,0,0,0.6);
+border:none;
+color:white;
+padding:10px 16px;
+border-radius:20px;
+cursor:pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+.stkCoreContainer{
+grid-template-columns:1fr;
+text-align:center;
+}
+
+.stkCoreTitle{
+font-size:34px;
+}
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<section id="stkCoreSection">
+
+<div class="stkCoreContainer">
+
+<!-- LEFT CONTENT -->
+
+<div>
+
+<h2 class="stkCoreTitle">
+Digital Core<br>
+Capabilities
+</h2>
+
+<p class="stkCoreText">
+Build vital capabilities to deliver outcomes.
+</p>
+
+<a href="4041.html">
+<button class="stkCoreBtn">
+EXPLORE
+</button>
+</a>
+
+</div>
+
+
+<!-- RIGHT VIDEO -->
+
+<div class="stkCoreVideoBox">
+
+<video id="stkVideo" class="stkCoreVideo">
+<source src="WhatsApp Video 2026-03-10 at 3.18.32 PM.mp4" type="video/mp4">
+</video>
+
+<button class="stkPlayBtn" onclick="toggleVideo()">
+Play
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<script>
+
+/* PLAY / PAUSE VIDEO */
+
+function toggleVideo(){
+
+const video = document.getElementById("stkVideo");
+const btn = document.querySelector(".stkPlayBtn");
+
+if(video.paused){
+
+video.play();
+btn.innerText = "Pause";
+
+}else{
+
+video.pause();
+btn.innerText = "Play";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+
+<!-- TESTIMONIALS -->
+<section class="testimonial-section">
+
+<h5 class="section-small">TESTIMONIALS</h5>
+<h2 class="section-title">What Clients Say</h2>
+
+<div class="testimonial-wrapper">
+
+<div class="testimonial-track">
+
+<div class="testimonial-card">
+<p>"Pavan created a clean and responsive website for our business. Very professional and fast work!"</p>
+<h4>- Rakesh Kumar</h4>
+<span>Small Business Owner</span>
+</div>
+
+<div class="testimonial-card">
+<p>"Excellent UI design and smooth animations. Highly recommended developer."</p>
+<h4>- Sneha R</h4>
+<span>Startup Founder</span>
+</div>
+
+<div class="testimonial-card">
+<p>"Our landing page performance improved a lot after his optimization."</p>
+<h4>- Arjun Shetty</h4>
+<span>Marketing Manager</span>
+</div>
+
+<div class="testimonial-card">
+<p>"Delivered the project on time and understood requirements perfectly."</p>
+<h4>- Priya Nair</h4>
+<span>Client</span>
+</div>
+
+</div>
+
+</div>
+</section>
+<style>
+    /* TESTIMONIALS */
+.testimonial-section{
+background:#e7e2e2;
+padding:120px 8%;
+text-align:center;
+}
+
+.testimonial-wrapper{
+overflow:hidden;
+max-width:900px;
+margin:60px auto 0;
+}
+
+.testimonial-track{
+display:flex;
+gap:30px;
+animation:slide 18s linear infinite;
+}
+
+.testimonial-card{
+min-width:100%;
+background:#151515;
+padding:35px;
+border-radius:18px;
+border:1px solid #262626;
+}
+
+.testimonial-card p{
+color:#cfcfcf;
+line-height:1.8;
+margin-bottom:18px;
+}
+
+.testimonial-card h4{
+color:#ff7a00;
+margin-bottom:5px;
+}
+
+.testimonial-card span{
+color:#aaa;
+font-size:14px;
+}
+
+@keyframes slide{
+0%{transform:translateX(0);}
+25%{transform:translateX(-100%);}
+50%{transform:translateX(-200%);}
+75%{transform:translateX(-300%);}
+100%{transform:translateX(0);}
+}
+
+</style>
+<!-- FAQ -->
+<section class="faq-section">
+
+<h5 class="section-small">QUESTIONS</h5>
+<h2 class="section-title">Frequently Asked Questions</h2>
+
+<div class="faq-container">
+
+<div class="faq-item">
+<button class="faq-question">Do you build responsive websites?</button>
+<div class="faq-answer">
+<p>Yes, all websites I develop are mobile friendly and work on all devices.</p>
+</div>
+</div>
+
+<div class="faq-item">
+<button class="faq-question">Which technologies do you use?</button>
+<div class="faq-answer">
+<p>I mainly use HTML, CSS, JavaScript and modern UI design practices.</p>
+</div>
+</div>
+
+<div class="faq-item">
+<button class="faq-question">Can you create a portfolio website?</button>
+<div class="faq-answer">
+<p>Yes, I create professional portfolio websites for students and developers.</p>
+</div>
+</div>
+
+<div class="faq-item">
+<button class="faq-question">How can I contact you?</button>
+<div class="faq-answer">
+<p>You can use the contact form below to send me a message.</p>
+</div>
+</div>
+
+</div>
+</section>
+<style>
+    /* FAQ */
+.faq-section{
+background:#f5f2f2;
+padding:120px 8%;
+}
+
+.faq-container{
+max-width:800px;
+margin:60px auto 0;
+}
+
+.faq-item{
+border-bottom:1px solid black;
+}
+
+.faq-question{
+width:100%;
+text-align:left;
+padding:18px;
+background:none;
+border:none;
+color:black;
+font-size:18px;
+cursor:pointer;
+position:relative;
+}
+
+.faq-question::after{
+content:"+";
+position:absolute;
+right:10px;
+color:blue;
+font-size:22px;
+}
+
+.faq-answer{
+max-height:0;
+overflow:hidden;
+transition:max-height .4s ease;
+padding:0 18px;
+}
+
+.faq-answer p{
+color:black;
+padding-bottom:18px;
+}
+
+/* active */
+.faq-item.active .faq-answer{
+max-height:200px;
+}
+
+.faq-item.active .faq-question::after{
+content:"−";
+}
+
+</style>
+<script>
+const faq=document.querySelectorAll(".faq-question");
+
+faq.forEach(btn=>{
+btn.addEventListener("click",()=>{
+btn.parentElement.classList.toggle("active");
+});
+});
+</script>
+<!-- VIDEO HERO -->
+<section class="video-hero">
+
+<!-- background video -->
+<video autoplay muted loop playsinline class="hero-video">
+<source src="WhatsApp Video 2025-11-27 at 8.08.14 PM.mp4" type="video/mp4">
+</video>
+
+<!-- dark overlay -->
+<div class="video-overlay"></div>
+
+<!-- hero content -->
+<div class="video-content">
+
+<h1 class="hero-title">
+Stackly<br>
+<span>Stackly Payment Gateway</span>
+</h1>
+
+<p class="hero-desc">
+tackly Payment Gateway is a modern digital payment platform designed to help businesses accept, manage, and track online payments securely and efficiently.
+</p>
+
+<a href="4041.html" class="hero-btn">View Portfolio</a>
+
+</div>
+</section>
+<style>
+    /* VIDEO HERO */
+.video-hero{
+position:relative;
+height:100vh;
+width:100%;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
+}
+
+/* video */
+.hero-video{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+min-width:100%;
+min-height:100%;
+object-fit:cover;
+z-index:-2;
+}
+
+/* overlay */
+.video-overlay{
+position:absolute;
+inset:0;
+background:linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.75));
+z-index:-1;
+}
+
+/* content */
+.video-content{
+max-width:800px;
+padding:20px;
+animation:fadeUp 1.2s ease forwards;
+}
+
+/* title */
+.hero-title{
+font-size:56px;
+font-weight:700;
+line-height:1.2;
+margin-bottom:18px;
+}
+
+.hero-title span{
+color:blue;
+font-size:26px;
+font-weight:500;
+}
+
+/* text */
+.hero-desc{
+color:#d0d0d0;
+line-height:1.7;
+margin-bottom:30px;
+}
+
+/* button */
+.hero-btn{
+display:inline-block;
+padding:14px 30px;
+border-radius:40px;
+background:#ff7a00;
+color:white;
+text-decoration:none;
+font-weight:600;
+transition:.3s;
+}
+
+.hero-btn:hover{
+transform:translateY(-4px);
+box-shadow:0 14px 35px rgba(255,122,0,.6);
+}
+
+/* animation */
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* mobile */
+@media(max-width:768px){
+.hero-title{font-size:36px;}
+.hero-title span{font-size:18px;}
+.hero-desc{font-size:14px;}
+.video-hero{height:90vh;}
+}
+
+</style>
+</body>
+</html>
+
+
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* ===== PREMIUM PAYMENT GATEWAY FOOTER ===== */
+    .footer {
+      background: #0f1a2b;  /* deep black-blue */
+      color: #e6ecf5;
+      border-top: 4px solid #2b6cff;
+      position: relative;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(0,0,0,0.3);
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #2b6cff, #ffffff, #2b6cff);
+      opacity: 0.5;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+    }
+
+    /* Footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #2b6cff;
+      border-radius: 2px;
+    }
+
+    /* Brand column with logo image */
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-logo img {
+      height: auto;
+      width: 150px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* makes white logo - remove if logo is colored */
+    }
+
+    .footer-about {
+      color: #b0c6e0;
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+
+    /* Social media icons - 4 items */
+    .footer-social {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1f2f44;
+      color: #2b6cff;
+      font-size: 1.3rem;
+      transition: 0.25s;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+
+    .footer-social a:hover {
+      background: #2b6cff;
+      color: white;
+      transform: translateY(-5px);
+      border-color: white;
+    }
+
+    /* Links columns */
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul li a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .footer-col ul li a i {
+      color: #2b6cff;
+      font-size: 0.8rem;
+      width: 18px;
+    }
+
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* Contact column */
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #c9d9f0;
+    }
+
+    .contact-item i {
+      width: 24px;
+      color: #2b6cff;
+      font-size: 1.1rem;
+    }
+
+    .payment-badges {
+      display: flex;
+      gap: 10px;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #1f2f44;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      border: 1px solid #2b6cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge i {
+      color: #2b6cff;
+    }
+
+    /* Newsletter - IMPROVED MOBILE VERSION */
+    .newsletter {
+      margin-top: 1.5rem;
+    }
+
+    .newsletter h4 {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .newsletter-box {
+      display: flex;
+      background: #1a2538;
+      border-radius: 60px;
+      overflow: hidden;
+      border: 2px solid #2b6cff;
+      width: 100%;
+    }
+
+    .newsletter-box input {
+      flex: 1;
+      min-width: 0; /* prevents overflow on mobile */
+      padding: 0.9rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .newsletter-box input::placeholder {
+      color: #8a9fc0;
+    }
+
+    .newsletter-box button {
+      background: #2b6cff;
+      border: none;
+      padding: 0 1.2rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      border-left: 2px solid white;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: auto;
+    }
+
+    .newsletter-box button i {
+      font-size: 0.9rem;
+    }
+
+    .newsletter-box button:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+      background: #0a1320;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1f3a70;
+      color: #9bb0d0;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom .legal-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom .legal-links a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .legal-links a:hover {
+      color: #2b6cff;
+    }
+
+    .footer-bottom .payment-icons i {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      color: #5f7d9e;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .payment-icons i:hover {
+      color: #2b6cff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem 1.5rem;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .footer-bottom .legal-links {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .footer-bottom .payment-icons {
+        margin-top: 0.5rem;
+      }
+      
+      .footer-bottom .payment-icons i {
+        margin: 0 0.5rem;
+      }
+      
+      /* Improved mobile newsletter */
+      .newsletter-box {
+        flex-direction: column;
+        border-radius: 30px;
+      }
+      
+      .newsletter-box input {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 2px solid #2b6cff;
+      }
+      
+      .newsletter-box button {
+        width: 100%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 2px solid white;
+        justify-content: center;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 380px) {
+      .footer-social {
+        gap: 10px;
+      }
+      
+      .footer-social a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      
+      .badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PREMIUM FOOTER - PAYMENT GATEWAY STYLE -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Column 1: Brand with logo image -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <!-- Logo image - replace src with your actual logo -->
+          <img src="stacklylogo (3).webp" alt="Stackly Pay" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span style="display:none; font-size:1.8rem; font-weight:700; color:white;">STACKLY<span style="color:#2b6cff;">pay</span></span>
+        </div>
+        <p class="footer-about">
+          Enterprise-grade payment gateway processing billions in transactions. Secure, scalable, and built for growth.
+        </p>
+        <!-- 4 SOCIAL MEDIA ICONS -->
+        <div class="footer-social">
+          <a href="4041.html"><i class="fab fa-linkedin-in"></i></a>
+         
+          <a href="4041.html"><i class="fab fa-instagram"></i></a>
+          <a href="4041.html"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <!-- Column 2: Solutions (all links to 404) -->
+      <div class="footer-col">
+        <h3>Solutions</h3>
+        <ul>
+          <li><a href="home.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="products.html"><i class="fas fa-chevron-right"></i> Products</a></li>
+          <li><a href="careers.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+          
+        </ul>
+      </div>
+
+      <!-- Column 3: Company (all links to 404) -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Press</a></li>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact & Newsletter with validation -->
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <div class="contact-item">
+          <i class="fas fa-map-pin"></i>
+          <span>100 Financial District, Bengaluru, India 571426</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>+91 9568759723</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>hello@stacklypay.com</span>
+        </div>
+
+        <!-- Payment badges -->
+        <div class="payment-badges">
+          <span class="badge"><i class="fab fa-cc-visa"></i> Visa</span>
+          <span class="badge"><i class="fab fa-cc-mastercard"></i> MC</span>
+          <span class="badge"><i class="fab fa-cc-amex"></i> Amex</span>
+        </div>
+
+        <!-- Newsletter with email validation -->
+        <div class="newsletter">
+          <h4>Stay updated</h4>
+          <div class="newsletter-box">
+            <input type="email" placeholder="your@email.com" id="newsletterEmail">
+            <button id="subscribeBtn"><i class="fas fa-paper-plane"></i> Subscribe</button>
+          </div>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom (all links to 404) -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2026 Stackly Pay. All rights reserved.
+      </div>
+      <div class="legal-links">
+        <a href="4041.html">Privacy Policy</a>
+        <a href="4041.html">Terms of Service</a>
+        <a href="4041.html">Cookie Policy</a>
+        <a href="4041.html">GDPR</a>
+      </div>
+      <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-amex"></i>
+        <i class="fab fa-cc-paypal"></i>
+        <i class="fab fa-cc-stripe"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Email validation and redirect to 404
+      const emailInput = document.getElementById('newsletterEmail');
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const emailError = document.getElementById('emailError');
+
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      function handleSubscribe() {
+        const email = emailInput.value.trim();
+        
+        if (email === '' || !validateEmail(email)) {
+          emailError.classList.add('show');
+        } else {
+          emailError.classList.remove('show');
+          // Redirect to 404 page
+          window.location.href = '4041.html';
+        }
+      }
+
+      if (subscribeBtn && emailInput) {
+        subscribeBtn.addEventListener('click', handleSubscribe);
+        
+        emailInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            handleSubscribe();
+          }
+        });
+
+        // Clear error when user starts typing
+        emailInput.addEventListener('input', () => {
+          emailError.classList.remove('show');
+        });
+      }
+
+      // All footer links already point to 404.html
+    })();
+  </script>
+</body>
+</html>

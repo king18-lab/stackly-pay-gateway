@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhonePe · Google Pay style | login/signup book</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter + Space Grotesk (modern UPI style) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f5ff, #e6edfc);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+    }
+
+    /* back to home button (floating) */
+    .back-home {
+      position: fixed;
+      top: 25px;
+      left: 25px;
+      background: #0f3b5e;
+      color: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      border: 2px solid #00b9f1;
+      z-index: 100;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 20px -8px #0f3b5e;
+    }
+    .back-home i {
+      color: #ffce5c;
+    }
+    .back-home:hover {
+      background: #00b9f1;
+      color: #0f3b5e;
+      border-color: white;
+    }
+
+    /* book container */
+    .book-container {
+      max-width: 1100px;
+      width: 100%;
+      perspective: 2500px;
+      margin: 4rem auto;
+    }
+
+    .book {
+      position: relative;
+      width: 100%;
+      min-height: 650px;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+    }
+
+    .book.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .page {
+      position: absolute;
+      width: 100%;
+      min-height: 650px;
+      backface-visibility: hidden;
+      border-radius: 50px 50px 50px 20px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 40px 80px -20px #0f3b5e80, 0 0 0 3px #00b9f1 inset, 0 0 0 5px #ffce5c inset;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .page.login {
+      transform: rotateY(0deg);
+    }
+
+    .page.signup {
+      transform: rotateY(180deg);
+    }
+
+    /* left side image (payment gateway theme) */
+    .image-side {
+      background: linear-gradient(145deg, #0f3b5e, #032b44);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem;
+      text-align: center;
+      border-right: 4px solid #ffce5c;
+    }
+    .image-side i {
+      font-size: 8rem;
+      color: #00b9f1;
+      filter: drop-shadow(0 20px 15px #001c33);
+      margin-bottom: 1.5rem;
+    }
+    .image-side h2 {
+      font-size: 2.2rem;
+      color: white;
+      margin-bottom: 0.8rem;
+    }
+    .image-side h2 span {
+      color: #ffce5c;
+    }
+    .image-side p {
+      color: #b0d0ff;
+      line-height: 1.6;
+      font-size: 1.1rem;
+      max-width: 280px;
+    }
+    .upi-badge {
+      background: #00b9f1;
+      padding: 0.4rem 1.5rem;
+      border-radius: 40px;
+      color: #0f3b5e;
+      font-weight: 700;
+      margin-top: 2rem;
+      border: 2px solid #ffce5c;
+    }
+
+    /* right side form */
+    .form-side {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #f9fcff;
+    }
+    .form-side h3 {
+      font-size: 2rem;
+      color: #0f3b5e;
+      margin-bottom: 0.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-side h3 i {
+      color: #00b9f1;
+    }
+    .subtitle {
+      color: #5f7d9e;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      color: #0f3b5e;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .input-wrapper {
+      position: relative;
+    }
+    .input-wrapper i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #00b9f1;
+      font-size: 1.1rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 1rem 1rem 1rem 3rem;
+      background: white;
+      border: 2px solid #dbe4f0;
+      border-radius: 50px;
+      color: #0f3b5e;
+      font-size: 1rem;
+      transition: 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #00b9f1;
+      box-shadow: 0 0 0 4px #00b9f140;
+    }
+    .form-control.error {
+      border-color: #ff4d4d;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: #0f3b5e;
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border: 2px solid #00b9f1;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 1rem 0 0.8rem;
+    }
+    .btn-submit:hover {
+      background: #00b9f1;
+      color: #0f3b5e;
+      border-color: #ffce5c;
+      transform: translateY(-2px);
+    }
+
+    .forgot-link {
+      text-align: right;
+      margin: 0.5rem 0 1rem;
+    }
+    .forgot-link a {
+      color: #00b9f1;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .forgot-link a:hover {
+      text-decoration: underline;
+      color: #0f3b5e;
+    }
+
+    .toggle-link {
+      text-align: center;
+      color: #5f7d9e;
+      font-size: 0.9rem;
+    }
+    .toggle-link a {
+      color: #0f3b5e;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 5px;
+      background: #ffce5c;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      display: inline-block;
+      transition: 0.2s;
+    }
+    .toggle-link a:hover {
+      background: #00b9f1;
+      color: white;
+    }
+
+    .error-message {
+      color: #ff4d4d;
+      font-size: 0.7rem;
+      margin-top: 0.2rem;
+      display: none;
+    }
+    .error-message.show {
+      display: block;
+    }
+
+    /* mobile responsiveness */
+    @media (max-width: 800px) {
+      .page {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .image-side {
+        border-right: none;
+        border-bottom: 4px solid #ffce5c;
+        padding: 2rem;
+      }
+      .image-side i {
+        font-size: 5rem;
+      }
+      .back-home {
+        top: 15px;
+        left: 15px;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BACK TO HOME BUTTON (links to 404.html) -->
+  <a href="index.html" class="back-home"><i class="fas fa-home"></i> back to home</a>
+
+  <div class="book-container">
+    <div class="book" id="book">
+
+      <!-- LOGIN PAGE (left image / right form) -->
+      <div class="page login">
+        <div class="image-side">
+          <i class="fas fa-google-pay"></i>
+          <h2><span>Stackly</span> · Pay</h2>
+          <p>Secure UPI payments • instant transfers • rewards</p>
+          <div class="upi-badge">#tez</div>
+        </div>
+        <div class="form-side">
+          <h3><i class="fas fa-sign-in-alt"></i> login</h3>
+          <div class="subtitle">access your payment account</div>
+
+          <div class="form-group">
+            <label><i class="fas fa-phone"></i> phone number (10 digits)</label>
+            <div class="input-wrapper">
+              <i class="fas fa-phone-alt"></i>
+              <input type="tel" class="form-control" id="loginPhone" placeholder="9876543210" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10); validateLogin()">
+            </div>
+            <div class="error-message" id="loginPhoneError">enter exactly 10 digits</div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> password</label>
+            <div class="input-wrapper">
+              <i class="fas fa-lock"></i>
+              <input type="password" class="form-control" id="loginPassword" oninput="validateLogin()">
+            </div>
+          </div>
+
+          <!-- FORGOT PASSWORD (click → 404.html) -->
+          <div class="forgot-link">
+            <a onclick="window.location.href='404.html'"><i class="fas fa-question-circle"></i> forgot password?</a>
+          </div>
+
+          <button class="btn-submit" id="loginBtn" onclick="handleLogin()" disabled><i class="fas fa-arrow-right"></i> log in</button>
+
+          <div class="toggle-link">
+            don't have an account?
+            <a onclick="flipBook()">sign up here</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGNUP PAGE (left image / right form) -->
+      <div class="page signup">
+        <div class="image-side">
+          <i class="fas fa-phone-alt"></i>
+          <h2>join <span>UPI</span> family</h2>
+          <p>Create your account · 10 second setup · get ₹100 cashback</p>
+          <div class="upi-badge">instant</div>
+        </div>
+        <div class="form-side">
+          <h3><i class="fas fa-user-plus"></i> sign up</h3>
+          <div class="subtitle">become a member</div>
+
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> full name (letters only)</label>
+            <div class="input-wrapper">
+              <i class="fas fa-user"></i>
+              <input type="text" class="form-control" id="signupName" placeholder="John Doe" onkeypress="return /[A-Za-z ]/.test(String.fromCharCode(event.which))" oninput="validateSignup()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-phone"></i> phone (10 digits only)</label>
+            <div class="input-wrapper">
+              <i class="fas fa-phone-alt"></i>
+              <input type="tel" class="form-control" id="signupPhone" placeholder="9876543210" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10); validateSignup()">
+            </div>
+            <div class="error-message" id="signupPhoneError">enter exactly 10 digits</div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> email (optional)</label>
+            <div class="input-wrapper">
+              <i class="fas fa-envelope"></i>
+              <input type="email" class="form-control" id="signupEmail" placeholder="your@email.com" oninput="validateSignup()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> password</label>
+            <div class="input-wrapper">
+              <i class="fas fa-lock"></i>
+              <input type="password" class="form-control" id="signupPassword" oninput="validateSignup()">
+            </div>
+          </div>
+
+          <button class="btn-submit" id="signupBtn" onclick="handleSignup()" disabled><i class="fas fa-user-check"></i> create account</button>
+
+          <div class="toggle-link">
+            already have an account?
+            <a onclick="flipBook()">log in here</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Flip book function (toggle between login/signup)
+    function flipBook() {
+      document.getElementById('book').classList.toggle('flipped');
+    }
+
+    // ----- LOGIN VALIDATION (phone + password mandatory) -----
+    function validateLogin() {
+      const phone = document.getElementById('loginPhone').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const loginBtn = document.getElementById('loginBtn');
+      const phoneError = document.getElementById('loginPhoneError');
+
+      // phone must be exactly 10 digits
+      const phoneValid = phone.length === 10 && /^\d+$/.test(phone);
+      
+      if (!phoneValid && phone.length > 0) {
+        phoneError.classList.add('show');
+      } else {
+        phoneError.classList.remove('show');
+      }
+
+      if (phoneValid && password !== '') {
+        loginBtn.disabled = false;
+      } else {
+        loginBtn.disabled = true;
+      }
+    }
+
+    // ----- SIGNUP VALIDATION (name, phone, password mandatory; email optional) -----
+    function validateSignup() {
+      const name = document.getElementById('signupName').value.trim();
+      const phone = document.getElementById('signupPhone').value.trim();
+      const password = document.getElementById('signupPassword').value.trim();
+      const signupBtn = document.getElementById('signupBtn');
+      const phoneError = document.getElementById('signupPhoneError');
+
+      const phoneValid = phone.length === 10 && /^\d+$/.test(phone);
+      
+      if (!phoneValid && phone.length > 0) {
+        phoneError.classList.add('show');
+      } else {
+        phoneError.classList.remove('show');
+      }
+
+      // name must not be empty, phone valid, password not empty
+      if (name !== '' && phoneValid && password !== '') {
+        signupBtn.disabled = false;
+      } else {
+        signupBtn.disabled = true;
+      }
+    }
+
+    // ----- HANDLE LOGIN (redirect to 404 if valid) -----
+    function handleLogin() {
+      const phone = document.getElementById('loginPhone').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const phoneValid = phone.length === 10 && /^\d+$/.test(phone);
+
+      if (phoneValid && password !== '') {
+        window.location.href = '404.html';
+      }
+    }
+
+    // ----- HANDLE SIGNUP (redirect to 404 if valid) -----
+    function handleSignup() {
+      const name = document.getElementById('signupName').value.trim();
+      const phone = document.getElementById('signupPhone').value.trim();
+      const password = document.getElementById('signupPassword').value.trim();
+      const phoneValid = phone.length === 10 && /^\d+$/.test(phone);
+
+      if (name !== '' && phoneValid && password !== '') {
+        window.location.href = '404.html';
+      }
+    }
+
+    // name field only letters + space (already using onkeypress, but extra)
+    document.getElementById('signupName').addEventListener('keypress', function(e) {
+      const char = String.fromCharCode(e.which);
+      if (!/^[A-Za-z ]$/.test(char)) {
+        e.preventDefault();
+      }
+    });
+
+    // initial validation calls (to set proper button state)
+    window.onload = function() {
+      validateLogin();
+      validateSignup();
+    };
+  </script>
+</body>
+</html>

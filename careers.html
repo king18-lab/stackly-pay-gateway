@@ -1,0 +1,2488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Stackly • 100% cover mobile menu (no search)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      color: #1e1e2f;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: #0f1a2b;
+      border-bottom: 4px solid #2b6cff;
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    .logo img {
+      height: auto;
+      width: 140px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Desktop menu - hidden on mobile */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 0.3rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e6ecf5;
+      font-weight: 500;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .nav-link i {
+      color: #2b6cff;
+      font-size: 1rem;
+    }
+
+    .nav-link:hover {
+      background: rgba(43, 108, 255, 0.15);
+      border-color: #2b6cff;
+      color: white;
+    }
+
+    /* Dropdown desktop */
+    .nav-item {
+      position: relative;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #0f1a2b;
+      min-width: 220px;
+      border-radius: 20px;
+      padding: 0.6rem 0;
+      box-shadow: 0 25px 35px -12px #000000cc, 0 0 0 1px #2b6cff;
+      border: 1px solid #2b6cff;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: 0.25s ease;
+      z-index: 100;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(6px);
+    }
+
+    .dropdown-content a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d3e0ff;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .dropdown-content a i {
+      width: 22px;
+      color: #2b6cff;
+    }
+
+    .dropdown-content a:hover {
+      background: #1a2f4a;
+      border-left-color: #2b6cff;
+      color: white;
+    }
+
+    /* Desktop right side - ONLY LOGIN (search removed) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid #2b6cff;
+      border-radius: 60px;
+      padding: 0.6rem 1.5rem;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .login-btn i {
+      font-size: 1rem;
+    }
+
+    .login-btn:hover {
+      background: #2b6cff;
+      color: white;
+      border-color: white;
+    }
+
+    /* Hamburger - perfect for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      background: #1f2b3f;
+      border-radius: 16px;
+      border: 2px solid #2b6cff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .hamburger:hover {
+      background: #2b6cff;
+    }
+    
+    .hamburger span {
+      width: 26px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    /* ===== 100% COVER MOBILE DRAWER (FULL SCREEN) ===== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 2999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;        /* 100% width */
+      height: 100vh;       /* 100% height */
+      background: #0a1322;
+      z-index: 3000;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      border-right: none;   /* no border, full coverage */
+      box-shadow: none;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #1f3a70;
+      padding-bottom: 1.2rem;
+    }
+
+    .drawer-logo img {
+      height: auto;
+      width: 150px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .close-drawer {
+      background: #1f3a70;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: white;
+      cursor: pointer;
+      border: 2px solid #2b6cff;
+      transition: 0.2s;
+    }
+    
+    .close-drawer:hover {
+      background: #2b6cff;
+    }
+
+    .mobile-menu {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .mobile-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: #eef4ff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .mobile-item i {
+      color: #2b6cff;
+      width: 28px;
+      font-size: 1.3rem;
+    }
+    
+    .mobile-item:hover {
+      background: #1f3a70;
+      transform: translateX(8px);
+    }
+
+    .mobile-dropdown {
+      margin-bottom: 0;
+    }
+    
+    .mobile-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+    
+    .mobile-dropdown-toggle:hover {
+      background: #1f3a70;
+    }
+    
+    .mobile-submenu {
+      display: none;
+      margin-left: 1.2rem;
+      margin-top: 10px;
+      padding-left: 1rem;
+      border-left: 4px solid #2b6cff;
+    }
+    
+    .mobile-submenu a {
+      display: block;
+      padding: 1rem 1.5rem;
+      background: #0e1a2a;
+      border-radius: 50px;
+      margin: 8px 0;
+      color: #b9d0ff;
+      text-decoration: none;
+      border-left: 4px solid transparent;
+      font-size: 1.1rem;
+    }
+    
+    .mobile-submenu a i {
+      margin-right: 12px;
+      color: #2b6cff;
+      width: 24px;
+    }
+    
+    .mobile-submenu a:hover {
+      background: #1f2f4a;
+      border-left-color: #2b6cff;
+    }
+    
+    .mobile-dropdown.open .mobile-submenu {
+      display: block;
+    }
+
+    /* Mobile login button - bigger for full screen */
+    .mobile-login {
+      background: #2b6cff;
+      border: none;
+      border-radius: 60px;
+      padding: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 2rem;
+      text-decoration: none;
+      border: 2px solid white;
+      transition: 0.2s;
+    }
+    
+    .mobile-login:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+    
+    .mobile-login i {
+      color: #0f1a2b;
+      font-size: 1.3rem;
+    }
+
+    /* RESPONSIVE: show hamburger on mobile */
+    @media screen and (max-width: 1024px) {
+      .nav-menu, .nav-actions {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .navbar {
+        padding: 0.3rem 1rem;
+      }
+    }
+
+    /* Small phones adjustments */
+    @media screen and (max-width: 400px) {
+      .logo img {
+        width: 120px;
+      }
+      .hamburger {
+        width: 44px;
+        height: 44px;
+      }
+      .mobile-drawer {
+        padding: 1.5rem 1rem;
+      }
+      .mobile-item, .mobile-dropdown-toggle {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.1rem;
+      }
+      .close-drawer {
+        width: 48px;
+        height: 48px;
+        font-size: 2rem;
+      }
+    }
+
+    /* Demo content */
+    .demo-content {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 40px;
+      border: 2px solid #2b6cff;
+      text-align: center;
+    }
+    .demo-content h1 {
+      color: #0f1a2b;
+      margin-bottom: 1rem;
+    }
+    .cover-note {
+      background: #2b6cff20;
+      padding: 1.2rem;
+      border-radius: 30px;
+      color: #0f1a2b;
+      margin-top: 2rem;
+      border: 2px dashed #2b6cff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR (DESKTOP + MOBILE HAMBURGER) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="stacklylogo (3).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- Desktop menu (hidden on mobile) -->
+      <ul class="nav-menu">
+        <li class="nav-item" id="desktopDropdown">
+          <a class="nav-link" id="desktopDropdownToggle">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="dropdown-content" id="desktopDropdownMenu">
+            <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+            <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+          </div>
+        </li>
+        <li><a href="products.html" class="nav-link"><i class="fas fa-compass"></i> Products</a></li>
+        <li><a href="careers.html" class="nav-link"><i class="fas fa-chart-pie"></i> Careers</a></li>
+        <li><a href="contact.html" class="nav-link"><i class="fas fa-cogs"></i> Contact</a></li>
+        
+      </ul>
+
+      <!-- Desktop actions: ONLY LOGIN (search removed) -->
+      <div class="nav-actions">
+        <a href="log1.html" class="login-btn"><i class="fas fa-user"></i> Login</a>
+      </div>
+
+      <!-- Hamburger for mobile -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay (semi-transparent) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  
+  <!-- 100% COVER MOBILE DRAWER - FULL SCREEN -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="stacklylogo (3).webp" alt="logo">
+      </div>
+      <div class="close-drawer" id="closeDrawer"><i class="fas fa-times"></i></div>
+    </div>
+
+    <div class="mobile-menu">
+      <!-- Mobile dropdown for Home -->
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <div class="mobile-dropdown-toggle" id="mobileDropdownToggle">
+          <span><i class="fas fa-home"></i> Home</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="mobile-submenu">
+          <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+        </div>
+      </div>
+
+      <a href="products.html" class="mobile-item"><i class="fas fa-compass"></i> Products</a>
+      <a href="careers.html" class="mobile-item"><i class="fas fa-chart-pie"></i>Careers</a>
+      <a href="contact.html" class="mobile-item"><i class="fas fa-cogs"></i> Contact</a>
+      
+    </div>
+
+    <!-- Mobile login button (big and prominent) -->
+    <a href="log1.html" class="mobile-login"><i class="fas fa-user"></i> Login</a>
+  </div>
+
+
+  <script>
+    (function() {
+      // ===== DESKTOP DROPDOWN =====
+      const desktopToggle = document.getElementById('desktopDropdownToggle');
+      const desktopMenu = document.getElementById('desktopDropdownMenu');
+      const desktopItem = document.getElementById('desktopDropdown');
+
+      if (desktopToggle && desktopMenu) {
+        desktopToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+          const chevron = desktopToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = desktopMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!desktopItem.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+            const chevron = desktopToggle.querySelector('.fa-chevron-down');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+
+      // ===== MOBILE DRAWER - FULL SCREEN =====
+      const hamburger = document.getElementById('hamburgerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('closeDrawer');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+      }
+      
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburger) hamburger.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
+
+      // ===== MOBILE DROPDOWN TOGGLE =====
+      const mobileToggle = document.getElementById('mobileDropdownToggle');
+      const mobileDropdown = document.getElementById('mobileDropdown');
+      
+      if (mobileToggle && mobileDropdown) {
+        mobileToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileDropdown.classList.toggle('open');
+          const chevron = mobileToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = mobileDropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+      }
+
+      // No search functionality - verified
+      console.log('100% cover mobile menu ready');
+    })();
+  </script>
+
+    <title>Stackly - Careers | Join Our Team</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: #1a1a1a;
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 1s ease;
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 1s ease;
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s ease;
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Hero Section */
+        .careers-hero {
+            padding: 80px 50px;
+            background: linear-gradient(135deg, #f5f9ff 0%, #ffffff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .careers-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,86,179,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        .careers-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0,86,179,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, 30px) scale(1.1); }
+        }
+
+        .hero-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            background: #e8f0fe;
+            color: #0056b3;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 25px;
+            animation: slideInLeft 1s ease;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 52px;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #1a1a1a;
+            animation: slideInLeft 1s ease 0.2s both;
+        }
+
+        .hero-title span {
+            color: #0056b3;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-title span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 0;
+            height: 8px;
+            background: rgba(0,86,179,0.2);
+            animation: lineGrow 1s ease 1.5s forwards;
+        }
+
+        @keyframes lineGrow {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .hero-description {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 35px;
+            max-width: 500px;
+            animation: slideInLeft 1s ease 0.4s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 50px;
+            margin-bottom: 40px;
+            animation: slideInLeft 1s ease 0.6s both;
+        }
+
+        .stat-item h3 {
+            font-size: 32px;
+            color: #0056b3;
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            animation: slideInLeft 1s ease 0.8s both;
+        }
+
+        .btn-primary {
+            padding: 15px 40px;
+            background: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,86,179,0.3);
+        }
+
+        .btn-outline {
+            padding: 15px 40px;
+            background: transparent;
+            border: 2px solid #0056b3;
+            color: #0056b3;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: #0056b3;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,86,179,0.2);
+        }
+
+        .hero-image {
+            position: relative;
+            animation: slideInRight 1s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.5s ease;
+        }
+
+        .hero-image:hover img {
+            transform: scale(1.02);
+        }
+
+        .hero-card {
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: bounce 3s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-card i {
+            font-size: 30px;
+            color: #0056b3;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-card-text h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .hero-card-text p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Why Join Us */
+        .why-join {
+            padding: 80px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .section-header p {
+            color: #666;
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 30px;
+            background: #f8faff;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,86,179,0.1);
+            border-color: #0056b3;
+        }
+
+        .benefit-icon {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: all 0.5s ease;
+        }
+
+        .benefit-card:hover .benefit-icon {
+            transform: rotateY(360deg);
+            background: #0056b3;
+        }
+
+        .benefit-card:hover .benefit-icon i {
+            color: white;
+        }
+
+        .benefit-icon i {
+            font-size: 30px;
+            color: #0056b3;
+            transition: color 0.5s ease;
+        }
+
+        .benefit-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .benefit-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Culture Section */
+        .culture {
+            padding: 80px 50px;
+            background: #f8faff;
+        }
+
+        .culture-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .culture-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .culture-card {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .culture-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .culture-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .culture-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,86,179,0.9), transparent);
+            color: white;
+            padding: 30px 20px;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+        }
+
+        .culture-card:hover .culture-overlay {
+            transform: translateY(0);
+        }
+
+        .culture-overlay h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .culture-overlay p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Open Positions */
+        .positions {
+            padding: 80px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .departments {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .dept-btn {
+            padding: 10px 25px;
+            background: transparent;
+            border: 2px solid #0056b3;
+            color: #0056b3;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dept-btn:hover,
+        .dept-btn.active {
+            background: #0056b3;
+            color: white;
+        }
+
+        .positions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+
+        .position-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .position-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,86,179,0.1);
+            border-color: #0056b3;
+        }
+
+        .position-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .position-header h3 {
+            font-size: 20px;
+            color: #0056b3;
+        }
+
+        .position-type {
+            background: #e8f0fe;
+            color: #0056b3;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .position-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .position-location i {
+            color: #0056b3;
+        }
+
+        .position-desc {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .position-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .position-tag {
+            background: #f8faff;
+            color: #0056b3;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .position-link {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .position-link:hover {
+            gap: 15px;
+        }
+
+        /* Life at Pine Labs */
+        .life {
+            padding: 80px 50px;
+            background: #f8faff;
+        }
+
+        .life-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .life-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .life-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .life-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .life-item:hover img {
+            transform: scale(1.2);
+        }
+
+        .life-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,86,179,0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .life-item:hover::after {
+            opacity: 1;
+        }
+
+        .life-item:first-child {
+            grid-column: span 2;
+            grid-row: span 2;
+            height: 420px;
+        }
+
+        /* Testimonials */
+        .employee-testimonials {
+            padding: 80px 50px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .employee-card {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+        }
+
+        .employee-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,86,179,0.1);
+            border-color: #0056b3;
+        }
+
+        .employee-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .employee-avatar {
+            width: 70px;
+            height: 70px;
+            background: #0056b3;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            transition: all 0.5s ease;
+        }
+
+        .employee-card:hover .employee-avatar {
+            transform: scale(1.1) rotate(360deg);
+            background: linear-gradient(135deg, #0056b3, #003d80);
+        }
+
+        .employee-info h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .employee-info p {
+            color: #0056b3;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .employee-info span {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .employee-quote {
+            color: #666;
+            line-height: 1.8;
+            font-size: 15px;
+            font-style: italic;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .employee-quote::before {
+            content: '"';
+            position: absolute;
+            left: 0;
+            top: -10px;
+            font-size: 40px;
+            color: #0056b3;
+            opacity: 0.2;
+        }
+
+        /* CTA Section */
+        .careers-cta {
+            padding: 80px 50px;
+            text-align: center;
+            background: linear-gradient(135deg, #0056b3, #003d80);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .careers-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="2" fill="white" opacity="0.1"/></svg>');
+            animation: moveBackground 20s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            from { transform: translate(0, 0); }
+            to { transform: translate(20px, 20px); }
+        }
+
+        .careers-cta h2 {
+            font-size: 40px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .careers-cta p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Values Section */
+        .values {
+            padding: 80px 50px;
+            background: linear-gradient(135deg, #f5f9ff, #ffffff);
+        }
+
+        .values-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .value-card {
+            text-align: center;
+            padding: 40px 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+        }
+
+        .value-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0,86,179,0.1);
+            border-color: #0056b3;
+        }
+
+        .value-icon {
+            width: 80px;
+            height: 80px;
+            background: #e8f0fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            transition: all 0.5s ease;
+        }
+
+        .value-card:hover .value-icon {
+            transform: rotateY(360deg);
+            background: #0056b3;
+        }
+
+        .value-card:hover .value-icon i {
+            color: white;
+        }
+
+        .value-icon i {
+            font-size: 32px;
+            color: #0056b3;
+            transition: color 0.5s ease;
+        }
+
+        .value-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .value-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-description {
+                margin: 0 auto 35px;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .benefits-grid,
+            .culture-grid,
+            .values-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .life-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .life-item:first-child {
+                grid-column: auto;
+                grid-row: auto;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .benefits-grid,
+            .culture-grid,
+            .values-grid,
+            .positions-grid,
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .life-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .section-header h2 {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 28px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .dept-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="careers-hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">Join Our Team</div>
+                <h1 class="hero-title">
+                    Build the Future of <span>Payments</span> With Us
+                </h1>
+                <p class="hero-description">
+                    Be part of India's leading payment solutions company. Work with brilliant minds, solve challenging problems, and make a real impact.
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <h3>1000+</h3>
+                        <p>Employees</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>8</h3>
+                        <p>Offices Globally</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>25+</h3>
+                        <p>Nationalities</p>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                 <a href="4041.html">  <button class="btn-primary">View Openings</button></a> 
+                 <a href="4041.html">   <button class="btn-outline">Life at Pine Labs</button></a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="digital39.webp" alt="Team at Pine Labs">
+                <div class="hero-card">
+                    <i class="fas fa-users"></i>
+                    <div class="hero-card-text">
+                        <h4>Great Place to Work</h4>
+                        <p>Certified 2023</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Join Us -->
+    <section class="why-join">
+        <div class="section-header reveal">
+            <h2>Why Join Pine Labs?</h2>
+            <p>We offer more than just a job - we offer a career</p>
+        </div>
+        <div class="benefits-grid">
+            <div class="benefit-card reveal-left">
+                <div class="benefit-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Growth Opportunities</h3>
+                <p>Accelerate your career with learning programs, mentorship, and clear growth paths</p>
+            </div>
+            <div class="benefit-card reveal">
+                <div class="benefit-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Health & Wellness</h3>
+                <p>Comprehensive health insurance, wellness programs, and gym memberships</p>
+            </div>
+            <div class="benefit-card reveal">
+                <div class="benefit-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h3>Competitive Pay</h3>
+                <p>Industry-best compensation, ESOPs, and performance bonuses</p>
+            </div>
+            <div class="benefit-card reveal-right">
+                <div class="benefit-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3>Flexible Work</h3>
+                <p>Hybrid work model, flexible hours, and work-from-home options</p>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- Culture Section -->
+    <section class="culture">
+        <div class="culture-container">
+            <div class="section-header reveal">
+                <h2>Our Culture</h2>
+                <p>A workplace where you can be yourself and do your best work</p>
+            </div>
+            <div class="culture-grid">
+                <div class="culture-card reveal-left">
+                    <img src="digital5.webp" alt="Team Collaboration">
+                    <div class="culture-overlay">
+                        <h3>Collaborative Environment</h3>
+                        <p>Work with talented colleagues who support your growth</p>
+                    </div>
+                </div>
+                <div class="culture-card reveal">
+                    <img src="digital19.webp" alt="Innovation">
+                    <div class="culture-overlay">
+                        <h3>Innovation Hub</h3>
+                        <p>Freedom to experiment and bring new ideas to life</p>
+                    </div>
+                </div>
+                <div class="culture-card reveal-right">
+                    <img src="digital21.webp" alt="Celebrations">
+                    <div class="culture-overlay">
+                        <h3>Celebrate Together</h3>
+                        <p>Regular team events, festivals, and achievements</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Positions -->
+    <section class="positions">
+        <div class="section-header reveal">
+            <h2>Open Positions</h2>
+            <p>Find your perfect role at Pine Labs</p>
+        </div>
+        
+        <div class="departments reveal">
+         <a href="4041.html">  <button class="dept-btn active">All Departments</button></a> 
+          <a href="4041.html"><button class="dept-btn">Engineering</button></a> 
+        <a href="4041.html"><button class="dept-btn">Product</button></a> 
+         <a href="4041.html"><button class="dept-btn">Sales</button></a> 
+         <a href="4041.html"> <button class="dept-btn">Marketing</button></a> 
+         <a href="4041.html"><button class="dept-btn">Operations</button></a> 
+        </div>
+
+        <div class="positions-grid">
+            <div class="position-card reveal-left">
+                <div class="position-header">
+                    <h3>Senior Software Engineer</h3>
+                    <span class="position-type">Full-time</span>
+                </div>
+                <div class="position-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Bangalore, India</span>
+                </div>
+                <p class="position-desc">Build scalable payment systems that process millions of transactions daily.</p>
+                <div class="position-tags">
+                    <span class="position-tag">Java</span>
+                    <span class="position-tag">Microservices</span>
+                    <span class="position-tag">AWS</span>
+                </div>
+                <a href="4041.html" class="position-link">Apply Now <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="position-card reveal">
+                <div class="position-header">
+                    <h3>Product Manager</h3>
+                    <span class="position-type">Full-time</span>
+                </div>
+                <div class="position-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Mumbai, India</span>
+                </div>
+                <p class="position-desc">Drive product strategy and roadmap for our payment gateway.</p>
+                <div class="position-tags">
+                    <span class="position-tag">Fintech</span>
+                    <span class="position-tag">Agile</span>
+                    <span class="position-tag">Analytics</span>
+                </div>
+                <a href="4041.html" class="position-link">Apply Now <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="position-card reveal">
+                <div class="position-header">
+                    <h3>Sales Director</h3>
+                    <span class="position-type">Full-time</span>
+                </div>
+                <div class="position-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Delhi, India</span>
+                </div>
+                <p class="position-desc">Lead enterprise sales and build relationships with key clients.</p>
+                <div class="position-tags">
+                    <span class="position-tag">B2B Sales</span>
+                    <span class="position-tag">Fintech</span>
+                    <span class="position-tag">Enterprise</span>
+                </div>
+                <a href="4041.html" class="position-link">Apply Now <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="position-card reveal-right">
+                <div class="position-header">
+                    <h3>UX Designer</h3>
+                    <span class="position-type">Full-time</span>
+                </div>
+                <div class="position-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Bangalore, India</span>
+                </div>
+                <p class="position-desc">Create intuitive and beautiful experiences for our payment products.</p>
+                <div class="position-tags">
+                    <span class="position-tag">UI/UX</span>
+                    <span class="position-tag">Figma</span>
+                    <span class="position-tag">Research</span>
+                </div>
+                <a href="4041.html" class="position-link">Apply Now <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Employee Testimonials -->
+    <section class="employee-testimonials">
+        <div class="section-header reveal">
+            <h2>Voices of Pine Labs</h2>
+            <p>Hear from our team members across the globe</p>
+        </div>
+        <div class="testimonial-grid">
+            <div class="employee-card reveal-left">
+                <div class="employee-header">
+                    <div class="employee-avatar">AK</div>
+                    <div class="employee-info">
+                        <h3>Ankit Kumar</h3>
+                        <p>Senior Software Engineer</p>
+                        <span>Joined 2020</span>
+                    </div>
+                </div>
+                <p class="employee-quote">
+                    The best part about working at Pine Labs is the ownership culture. You get to work on challenging problems and see your ideas come to life. The learning never stops here.
+                </p>
+            </div>
+            <div class="employee-card reveal-right">
+                <div class="employee-header">
+                    <div class="employee-avatar">PS</div>
+                    <div class="employee-info">
+                        <h3>Priya Sharma</h3>
+                        <p>Product Manager</p>
+                        <span>Joined 2019</span>
+                    </div>
+                </div>
+                <p class="employee-quote">
+                    I love how collaborative the environment is. Everyone is willing to help and share knowledge. The impact we create on millions of merchants is truly rewarding.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Life at Pine Labs -->
+    <section class="life">
+        <div class="life-container">
+            <div class="section-header reveal">
+                <h2>Life at Stackly Payment</h2>
+                <p>Moments that make our workplace special</p>
+            </div>
+            <div class="life-grid">
+                <div class="life-item reveal-left">
+                    <img src="pav4.webp" alt="Team Lunch">
+                </div>
+                <div class="life-item reveal">
+                    <img src="hero3.webp" alt="Hackathon">
+                </div>
+                <div class="life-item reveal">
+                    <img src="hr25.webp" alt="Celebration">
+                </div>
+                <div class="life-item reveal">
+                    <img src="pavan2.webp" alt="Team Outing">
+                </div>
+                <div class="life-item reveal-right">
+                    <img src="hr23.webp" alt="Award Ceremony">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="careers-cta">
+        <h2 class="reveal">Ready to Join Our Team?</h2>
+        <p class="reveal">Take the next step in your career with Pine Labs</p>
+        <div class="cta-buttons">
+      <a href="4041.html">      <button class="btn-white reveal-left">View All Jobs</button></a>
+      <a href="4041.html">    <button class="btn-outline-white reveal-right">Contact Recruitment</button></a>
+        </div>
+    </section>
+<style>
+  /* ===== STACKLY CTA SECTION ===== */
+
+.careers-cta{
+background:linear-gradient(135deg,#1e3a8a,#2563eb);
+padding:80px 20px;
+text-align:center;
+color:#fff;
+font-family:Poppins,sans-serif;
+}
+
+.careers-cta h2{
+font-size:36px;
+margin-bottom:10px;
+}
+
+.careers-cta p{
+font-size:18px;
+margin-bottom:35px;
+opacity:0.9;
+}
+
+/* BUTTON CONTAINER */
+
+.cta-buttons{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+/* WHITE BUTTON */
+
+.btn-white{
+background:#fff;
+color:#2563eb;
+border:none;
+padding:14px 30px;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+transition:0.3s;
+}
+
+.btn-white:hover{
+background:#f1f5f9;
+transform:translateY(-3px);
+box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* OUTLINE BUTTON */
+
+.btn-outline-white{
+background:transparent;
+border:2px solid #fff;
+color:#fff;
+padding:12px 30px;
+font-size:16px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+transition:0.3s;
+}
+
+.btn-outline-white:hover{
+background:#fff;
+color:#2563eb;
+transform:translateY(-3px);
+box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.careers-cta h2{
+font-size:26px;
+}
+
+.careers-cta p{
+font-size:16px;
+}
+
+.cta-buttons{
+flex-direction:column;
+gap:15px;
+}
+
+.btn-white,
+.btn-outline-white{
+width:220px;
+margin:auto;
+}
+
+}
+</style>
+    <script>
+        // Scroll Reveal Animation
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+            
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveals[i].getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (revealTop < windowHeight - revealPoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
+        window.addEventListener('scroll', reveal);
+        window.addEventListener('load', reveal);
+
+        // Department filter buttons
+        const deptBtns = document.querySelectorAll('.dept-btn');
+        deptBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                deptBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* ===== PREMIUM PAYMENT GATEWAY FOOTER ===== */
+    .footer {
+      background: #0f1a2b;  /* deep black-blue */
+      color: #e6ecf5;
+      border-top: 4px solid #2b6cff;
+      position: relative;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(0,0,0,0.3);
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #2b6cff, #ffffff, #2b6cff);
+      opacity: 0.5;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+    }
+
+    /* Footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #2b6cff;
+      border-radius: 2px;
+    }
+
+    /* Brand column with logo image */
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-logo img {
+      height: auto;
+      width: 150px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* makes white logo - remove if logo is colored */
+    }
+
+    .footer-about {
+      color: #b0c6e0;
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+
+    /* Social media icons - 4 items */
+    .footer-social {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1f2f44;
+      color: #2b6cff;
+      font-size: 1.3rem;
+      transition: 0.25s;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+
+    .footer-social a:hover {
+      background: #2b6cff;
+      color: white;
+      transform: translateY(-5px);
+      border-color: white;
+    }
+
+    /* Links columns */
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul li a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .footer-col ul li a i {
+      color: #2b6cff;
+      font-size: 0.8rem;
+      width: 18px;
+    }
+
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* Contact column */
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #c9d9f0;
+    }
+
+    .contact-item i {
+      width: 24px;
+      color: #2b6cff;
+      font-size: 1.1rem;
+    }
+
+    .payment-badges {
+      display: flex;
+      gap: 10px;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #1f2f44;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      border: 1px solid #2b6cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge i {
+      color: #2b6cff;
+    }
+
+    /* Newsletter - IMPROVED MOBILE VERSION */
+    .newsletter {
+      margin-top: 1.5rem;
+    }
+
+    .newsletter h4 {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .newsletter-box {
+      display: flex;
+      background: #1a2538;
+      border-radius: 60px;
+      overflow: hidden;
+      border: 2px solid #2b6cff;
+      width: 100%;
+    }
+
+    .newsletter-box input {
+      flex: 1;
+      min-width: 0; /* prevents overflow on mobile */
+      padding: 0.9rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .newsletter-box input::placeholder {
+      color: #8a9fc0;
+    }
+
+    .newsletter-box button {
+      background: #2b6cff;
+      border: none;
+      padding: 0 1.2rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      border-left: 2px solid white;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: auto;
+    }
+
+    .newsletter-box button i {
+      font-size: 0.9rem;
+    }
+
+    .newsletter-box button:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+      background: #0a1320;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1f3a70;
+      color: #9bb0d0;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom .legal-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom .legal-links a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .legal-links a:hover {
+      color: #2b6cff;
+    }
+
+    .footer-bottom .payment-icons i {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      color: #5f7d9e;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .payment-icons i:hover {
+      color: #2b6cff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem 1.5rem;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .footer-bottom .legal-links {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .footer-bottom .payment-icons {
+        margin-top: 0.5rem;
+      }
+      
+      .footer-bottom .payment-icons i {
+        margin: 0 0.5rem;
+      }
+      
+      /* Improved mobile newsletter */
+      .newsletter-box {
+        flex-direction: column;
+        border-radius: 30px;
+      }
+      
+      .newsletter-box input {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 2px solid #2b6cff;
+      }
+      
+      .newsletter-box button {
+        width: 100%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 2px solid white;
+        justify-content: center;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 380px) {
+      .footer-social {
+        gap: 10px;
+      }
+      
+      .footer-social a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      
+      .badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PREMIUM FOOTER - PAYMENT GATEWAY STYLE -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Column 1: Brand with logo image -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <!-- Logo image - replace src with your actual logo -->
+          <img src="stacklylogo (3).webp" alt="Stackly Pay" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span style="display:none; font-size:1.8rem; font-weight:700; color:white;">STACKLY<span style="color:#2b6cff;">pay</span></span>
+        </div>
+        <p class="footer-about">
+          Enterprise-grade payment gateway processing billions in transactions. Secure, scalable, and built for growth.
+        </p>
+        <!-- 4 SOCIAL MEDIA ICONS -->
+        <div class="footer-social">
+          <a href="4041.html"><i class="fab fa-linkedin-in"></i></a>
+         
+          <a href="4041.html"><i class="fab fa-instagram"></i></a>
+          <a href="4041.html"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <!-- Column 2: Solutions (all links to 404) -->
+      <div class="footer-col">
+        <h3>Solutions</h3>
+        <ul>
+          <li><a href="home.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="products.html"><i class="fas fa-chevron-right"></i> Products</a></li>
+          <li><a href="careers.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+          
+        </ul>
+      </div>
+
+      <!-- Column 3: Company (all links to 404) -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Press</a></li>
+          <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact & Newsletter with validation -->
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <div class="contact-item">
+          <i class="fas fa-map-pin"></i>
+          <span>100 Financial District, Bengaluru, India 571426</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>+91 9568759723</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>hello@stacklypay.com</span>
+        </div>
+
+        <!-- Payment badges -->
+        <div class="payment-badges">
+          <span class="badge"><i class="fab fa-cc-visa"></i> Visa</span>
+          <span class="badge"><i class="fab fa-cc-mastercard"></i> MC</span>
+          <span class="badge"><i class="fab fa-cc-amex"></i> Amex</span>
+        </div>
+
+        <!-- Newsletter with email validation -->
+        <div class="newsletter">
+          <h4>Stay updated</h4>
+          <div class="newsletter-box">
+            <input type="email" placeholder="your@email.com" id="newsletterEmail">
+            <button id="subscribeBtn"><i class="fas fa-paper-plane"></i> Subscribe</button>
+          </div>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom (all links to 404) -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2026 Stackly Pay. All rights reserved.
+      </div>
+      <div class="legal-links">
+        <a href="4041.html">Privacy Policy</a>
+        <a href="4041.html">Terms of Service</a>
+        <a href="4041.html">Cookie Policy</a>
+        <a href="4041.html">GDPR</a>
+      </div>
+      <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-amex"></i>
+        <i class="fab fa-cc-paypal"></i>
+        <i class="fab fa-cc-stripe"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Email validation and redirect to 404
+      const emailInput = document.getElementById('newsletterEmail');
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const emailError = document.getElementById('emailError');
+
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      function handleSubscribe() {
+        const email = emailInput.value.trim();
+        
+        if (email === '' || !validateEmail(email)) {
+          emailError.classList.add('show');
+        } else {
+          emailError.classList.remove('show');
+          // Redirect to 404 page
+          window.location.href = '4041.html';
+        }
+      }
+
+      if (subscribeBtn && emailInput) {
+        subscribeBtn.addEventListener('click', handleSubscribe);
+        
+        emailInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            handleSubscribe();
+          }
+        });
+
+        // Clear error when user starts typing
+        emailInput.addEventListener('input', () => {
+          emailError.classList.remove('show');
+        });
+      }
+
+      // All footer links already point to 404.html
+    })();
+  </script>
+</body>
+</html>

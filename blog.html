@@ -1,0 +1,3130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Stackly • 100% cover mobile menu (no search)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      color: #1e1e2f;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: #0f1a2b;
+      border-bottom: 4px solid #2b6cff;
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    .logo img {
+      height: auto;
+      width: 140px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Desktop menu - hidden on mobile */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 0.3rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e6ecf5;
+      font-weight: 500;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .nav-link i {
+      color: #2b6cff;
+      font-size: 1rem;
+    }
+
+    .nav-link:hover {
+      background: rgba(43, 108, 255, 0.15);
+      border-color: #2b6cff;
+      color: white;
+    }
+
+    /* Dropdown desktop */
+    .nav-item {
+      position: relative;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #0f1a2b;
+      min-width: 220px;
+      border-radius: 20px;
+      padding: 0.6rem 0;
+      box-shadow: 0 25px 35px -12px #000000cc, 0 0 0 1px #2b6cff;
+      border: 1px solid #2b6cff;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: 0.25s ease;
+      z-index: 100;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(6px);
+    }
+
+    .dropdown-content a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d3e0ff;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .dropdown-content a i {
+      width: 22px;
+      color: #2b6cff;
+    }
+
+    .dropdown-content a:hover {
+      background: #1a2f4a;
+      border-left-color: #2b6cff;
+      color: white;
+    }
+
+    /* Desktop right side - ONLY LOGIN (search removed) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid #2b6cff;
+      border-radius: 60px;
+      padding: 0.6rem 1.5rem;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .login-btn i {
+      font-size: 1rem;
+    }
+
+    .login-btn:hover {
+      background: #2b6cff;
+      color: white;
+      border-color: white;
+    }
+
+    /* Hamburger - perfect for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      background: #1f2b3f;
+      border-radius: 16px;
+      border: 2px solid #2b6cff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .hamburger:hover {
+      background: #2b6cff;
+    }
+    
+    .hamburger span {
+      width: 26px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    /* ===== 100% COVER MOBILE DRAWER (FULL SCREEN) ===== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 2999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;        /* 100% width */
+      height: 100vh;       /* 100% height */
+      background: #0a1322;
+      z-index: 3000;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      border-right: none;   /* no border, full coverage */
+      box-shadow: none;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #1f3a70;
+      padding-bottom: 1.2rem;
+    }
+
+    .drawer-logo img {
+      height: auto;
+      width: 150px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .close-drawer {
+      background: #1f3a70;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: white;
+      cursor: pointer;
+      border: 2px solid #2b6cff;
+      transition: 0.2s;
+    }
+    
+    .close-drawer:hover {
+      background: #2b6cff;
+    }
+
+    .mobile-menu {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .mobile-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: #eef4ff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .mobile-item i {
+      color: #2b6cff;
+      width: 28px;
+      font-size: 1.3rem;
+    }
+    
+    .mobile-item:hover {
+      background: #1f3a70;
+      transform: translateX(8px);
+    }
+
+    .mobile-dropdown {
+      margin-bottom: 0;
+    }
+    
+    .mobile-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+    
+    .mobile-dropdown-toggle:hover {
+      background: #1f3a70;
+    }
+    
+    .mobile-submenu {
+      display: none;
+      margin-left: 1.2rem;
+      margin-top: 10px;
+      padding-left: 1rem;
+      border-left: 4px solid #2b6cff;
+    }
+    
+    .mobile-submenu a {
+      display: block;
+      padding: 1rem 1.5rem;
+      background: #0e1a2a;
+      border-radius: 50px;
+      margin: 8px 0;
+      color: #b9d0ff;
+      text-decoration: none;
+      border-left: 4px solid transparent;
+      font-size: 1.1rem;
+    }
+    
+    .mobile-submenu a i {
+      margin-right: 12px;
+      color: #2b6cff;
+      width: 24px;
+    }
+    
+    .mobile-submenu a:hover {
+      background: #1f2f4a;
+      border-left-color: #2b6cff;
+    }
+    
+    .mobile-dropdown.open .mobile-submenu {
+      display: block;
+    }
+
+    /* Mobile login button - bigger for full screen */
+    .mobile-login {
+      background: #2b6cff;
+      border: none;
+      border-radius: 60px;
+      padding: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 2rem;
+      text-decoration: none;
+      border: 2px solid white;
+      transition: 0.2s;
+    }
+    
+    .mobile-login:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+    
+    .mobile-login i {
+      color: #0f1a2b;
+      font-size: 1.3rem;
+    }
+
+    /* RESPONSIVE: show hamburger on mobile */
+    @media screen and (max-width: 1024px) {
+      .nav-menu, .nav-actions {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .navbar {
+        padding: 0.3rem 1rem;
+      }
+    }
+
+    /* Small phones adjustments */
+    @media screen and (max-width: 400px) {
+      .logo img {
+        width: 120px;
+      }
+      .hamburger {
+        width: 44px;
+        height: 44px;
+      }
+      .mobile-drawer {
+        padding: 1.5rem 1rem;
+      }
+      .mobile-item, .mobile-dropdown-toggle {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.1rem;
+      }
+      .close-drawer {
+        width: 48px;
+        height: 48px;
+        font-size: 2rem;
+      }
+    }
+
+    /* Demo content */
+    .demo-content {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 40px;
+      border: 2px solid #2b6cff;
+      text-align: center;
+    }
+    .demo-content h1 {
+      color: #0f1a2b;
+      margin-bottom: 1rem;
+    }
+    .cover-note {
+      background: #2b6cff20;
+      padding: 1.2rem;
+      border-radius: 30px;
+      color: #0f1a2b;
+      margin-top: 2rem;
+      border: 2px dashed #2b6cff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR (DESKTOP + MOBILE HAMBURGER) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="stacklylogo (3).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- Desktop menu (hidden on mobile) -->
+      <ul class="nav-menu">
+        <li class="nav-item" id="desktopDropdown">
+          <a class="nav-link" id="desktopDropdownToggle">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="dropdown-content" id="desktopDropdownMenu">
+            <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+            <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+          </div>
+        </li>
+        <li><a href="soluation.html" class="nav-link"><i class="fas fa-compass"></i> Solutions</a></li>
+        <li><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+        <li><a href="services.html" class="nav-link"><i class="fas fa-cogs"></i> Services</a></li>
+        <li><a href="about.html" class="nav-link"><i class="fas fa-users"></i> About</a></li>
+        <li><a href="blog.html" class="nav-link"><i class="fas fa-blog"></i> Blog</a></li>
+      </ul>
+
+      <!-- Desktop actions: ONLY LOGIN (search removed) -->
+      <div class="nav-actions">
+        <a href="login.html" class="login-btn"><i class="fas fa-user"></i> Login</a>
+      </div>
+
+      <!-- Hamburger for mobile -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay (semi-transparent) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  
+  <!-- 100% COVER MOBILE DRAWER - FULL SCREEN -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="stacklylogo (3).webp" alt="logo">
+      </div>
+      <div class="close-drawer" id="closeDrawer"><i class="fas fa-times"></i></div>
+    </div>
+
+    <div class="mobile-menu">
+      <!-- Mobile dropdown for Home -->
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <div class="mobile-dropdown-toggle" id="mobileDropdownToggle">
+          <span><i class="fas fa-home"></i> Home</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="mobile-submenu">
+          <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+        </div>
+      </div>
+
+      <a href="soluation.html" class="mobile-item"><i class="fas fa-compass"></i> Solutions</a>
+      <a href="dashboard.html" class="mobile-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="services.html" class="mobile-item"><i class="fas fa-cogs"></i> Services</a>
+      <a href="about.html" class="mobile-item"><i class="fas fa-users"></i> About</a>
+      <a href="blog.html" class="mobile-item"><i class="fas fa-blog"></i> Blog</a>
+    </div>
+
+    <!-- Mobile login button (big and prominent) -->
+    <a href="login.html" class="mobile-login"><i class="fas fa-user"></i> Login</a>
+  </div>
+
+  
+
+  <script>
+    (function() {
+      // ===== DESKTOP DROPDOWN =====
+      const desktopToggle = document.getElementById('desktopDropdownToggle');
+      const desktopMenu = document.getElementById('desktopDropdownMenu');
+      const desktopItem = document.getElementById('desktopDropdown');
+
+      if (desktopToggle && desktopMenu) {
+        desktopToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+          const chevron = desktopToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = desktopMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!desktopItem.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+            const chevron = desktopToggle.querySelector('.fa-chevron-down');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+
+      // ===== MOBILE DRAWER - FULL SCREEN =====
+      const hamburger = document.getElementById('hamburgerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('closeDrawer');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+      }
+      
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburger) hamburger.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
+
+      // ===== MOBILE DROPDOWN TOGGLE =====
+      const mobileToggle = document.getElementById('mobileDropdownToggle');
+      const mobileDropdown = document.getElementById('mobileDropdown');
+      
+      if (mobileToggle && mobileDropdown) {
+        mobileToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileDropdown.classList.toggle('open');
+          const chevron = mobileToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = mobileDropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+      }
+
+      // No search functionality - verified
+      console.log('100% cover mobile menu ready');
+    })();
+  </script>
+</body>
+</html>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #60a5fa;
+            --accent-blue: #3b82f6;
+            --pure-white: #ffffff;
+            --off-white: #f8fafc;
+            --light-gray: #f1f5f9;
+            --medium-gray: #e2e8f0;
+            --dark-gray: #334155;
+            --text-dark: #0f172a;
+            --text-light: #475569;
+            --success-green: #10b981;
+            --gradient-blue: linear-gradient(135deg, #2563eb, #1e40af);
+            --gradient-light: linear-gradient(135deg, #ffffff, #f1f5f9);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-blue: 0 10px 30px -5px rgba(37, 99, 235, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--pure-white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-subtitle {
+            color: var(--primary-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-subtitle::before,
+        .section-subtitle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 2px;
+            background: var(--primary-blue);
+        }
+
+        .section-subtitle::before {
+            right: 100%;
+            margin-right: 15px;
+        }
+
+        .section-subtitle::after {
+            left: 100%;
+            margin-left: 15px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            margin-bottom: 20px;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-description {
+            color: var(--text-light);
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Blog Hero Section */
+        .blog-hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--pure-white) 0%, var(--light-gray) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .blog-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, 20px) scale(1.05); }
+        }
+
+        .blog-hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .blog-hero-text {
+            padding-right: 30px;
+        }
+
+        .blog-hero-badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-blue);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            animation: slideInLeft 1s;
+        }
+
+        .blog-hero-title {
+            font-size: 52px;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            animation: slideInLeft 1s 0.2s both;
+        }
+
+        .blog-hero-title span {
+            color: var(--primary-blue);
+            position: relative;
+            display: inline-block;
+        }
+
+        .blog-hero-title span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(37, 99, 235, 0.2);
+            z-index: -1;
+            animation: widthGrow 1s 1s both;
+        }
+
+        @keyframes widthGrow {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .blog-hero-description {
+            color: var(--text-light);
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            animation: slideInLeft 1s 0.4s both;
+        }
+
+        .blog-hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            animation: slideInLeft 1s 0.6s both;
+        }
+
+        .blog-hero-stat-item {
+            text-align: left;
+        }
+
+        .blog-hero-stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .blog-hero-stat-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .blog-hero-search {
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            animation: slideInLeft 1s 0.8s both;
+        }
+
+        .blog-hero-search input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .blog-hero-search input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .blog-hero-search button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-blue);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.5s;
+        }
+
+        .blog-hero-search button:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .blog-hero-image {
+            position: relative;
+            animation: slideInRight 1s;
+        }
+
+        .blog-hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.5s;
+        }
+
+        .blog-hero-image:hover img {
+            transform: scale(1.02) translateY(-10px);
+        }
+
+        .blog-hero-shape {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 150px;
+            height: 150px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Featured Post */
+        .featured-post {
+            padding: 60px 0;
+            background: var(--pure-white);
+        }
+
+        .featured-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            background: var(--off-white);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.5s;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        .featured-image {
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s;
+        }
+
+        .featured-card:hover .featured-image img {
+            transform: scale(1.1);
+        }
+
+        .featured-image-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .featured-content {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-category {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .featured-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .featured-excerpt {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .featured-meta {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .featured-meta i {
+            color: var(--primary-blue);
+            margin-right: 5px;
+        }
+.blog-card-btn{
+display:inline-block;
+padding:12px 26px;
+background:#00b894;
+color:#fff;
+text-decoration:none;
+border-radius:30px;
+font-weight:500;
+transition:0.3s;
+}
+
+.blog-card-btn:hover{
+background:#019875;
+}
+        .featured-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            background: var(--gradient-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            width: fit-content;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .featured-btn:hover {
+            gap: 20px;
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        /* Category Sections */
+        .category-section {
+            padding: 80px 0;
+            background: var(--pure-white);
+        }
+
+        .category-section:nth-child(even) {
+            background: var(--light-gray);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .category-title {
+            font-size: 32px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .category-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background: var(--gradient-blue);
+            border-radius: 5px;
+        }
+
+        .category-view-all {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .category-view-all:hover {
+            gap: 15px;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .blog-card {
+            background: var(--pure-white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.5s;
+            position: relative;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-15px) scale(102%);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .blog-card-image {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .blog-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s;
+        }
+
+        .blog-card:hover .blog-card-image img {
+            transform: scale(1.2);
+        }
+
+        .blog-card-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .blog-card-content {
+            padding: 25px;
+        }
+
+        .blog-card-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .blog-card-excerpt {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .blog-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .blog-card-author {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .blog-card-author img {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .blog-card-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .blog-card-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            gap: 15px;
+        }
+
+        /* Technology Section */
+        .tech-card {
+            background: linear-gradient(135deg, var(--pure-white), var(--light-gray));
+            border: 1px solid var(--medium-gray);
+        }
+
+        .tech-icon {
+            font-size: 40px;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+
+        /* Architecture & Engineering */
+        .arch-card .blog-card-image {
+            height: 250px;
+        }
+
+        /* Mobile Section */
+        .mobile-card {
+            position: relative;
+        }
+
+        .mobile-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--success-green);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        /* People Stories */
+        .story-card .blog-card-image {
+            height: 150px;
+        }
+
+        .story-quote {
+            font-style: italic;
+            color: var(--text-light);
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--light-gray);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        /* Product Related */
+        .product-stats {
+            display: flex;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .product-stat {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: var(--light-gray);
+            border-radius: 10px;
+        }
+
+        .product-stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .product-stat-label {
+            font-size: 10px;
+            color: var(--text-light);
+        }
+
+        
+
+        /* Blog Details Page Modal */
+        .blog-details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            overflow-y: auto;
+            padding: 50px 20px;
+        }
+
+        .blog-details-modal.active {
+            display: block;
+        }
+
+        .blog-details-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--pure-white);
+            border-radius: 30px;
+            overflow: hidden;
+            animation: modalSlideIn 0.5s;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .blog-details-image {
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .blog-details-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-details-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .blog-details-close:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .blog-details-body {
+            padding: 50px;
+        }
+
+        .blog-details-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .blog-details-meta {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            color: var(--text-light);
+        }
+
+        .blog-details-text {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .blog-details-text p {
+            margin-bottom: 20px;
+        }
+
+        .blog-details-quote {
+            font-size: 24px;
+            font-style: italic;
+            color: var(--primary-blue);
+            padding: 30px;
+            background: var(--light-gray);
+            border-radius: 20px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .blog-details-quote::before {
+            content: '"';
+            font-size: 100px;
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            opacity: 0.2;
+        }
+
+        .blog-details-tags {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .blog-tag {
+            padding: 8px 20px;
+            background: var(--light-gray);
+            border-radius: 50px;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+
+        .blog-tag:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .blog-details-share {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .share-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .share-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .blog-hero-content,
+            .featured-card {
+                grid-template-columns: 1fr;
+            }
+
+            .blog-hero-text {
+                padding-right: 0;
+                text-align: center;
+            }
+
+            .blog-hero-stats {
+                justify-content: center;
+            }
+
+            .blog-hero-search {
+                margin: 0 auto;
+            }
+
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .blog-hero-title {
+                font-size: 36px;
+            }
+
+            .blog-hero-stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .blog-hero-stat-item {
+                text-align: center;
+            }
+
+            .section-title {
+                font-size: 32px;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-content {
+                padding: 30px;
+            }
+
+            .featured-title {
+                font-size: 28px;
+            }
+
+            .category-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .category-title {
+                padding-left: 0;
+            }
+
+            .category-title::before {
+                display: none;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .blog-details-body {
+                padding: 30px;
+            }
+
+            .blog-details-title {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blog-hero-title {
+                font-size: 28px;
+            }
+
+            .blog-hero-description {
+                font-size: 16px;
+            }
+
+            .blog-hero-stat-number {
+                font-size: 28px;
+            }
+
+            .featured-image {
+                height: 250px;
+            }
+
+            .featured-title {
+                font-size: 24px;
+            }
+
+            .blog-details-image {
+                height: 250px;
+            }
+
+            .blog-details-title {
+                font-size: 24px;
+            }
+
+            .blog-details-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        /* 404 Page */
+        .blog-404 {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(135deg, var(--pure-white), var(--light-gray));
+        }
+
+        .blog-404-icon {
+            font-size: 80px;
+            color: var(--primary-blue);
+            margin-bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .blog-404-title {
+            font-size: 120px;
+            font-weight: bold;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 20px;
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% { transform: skew(0deg); }
+            95% { transform: skew(5deg); }
+            96% { transform: skew(-5deg); }
+            97% { transform: skew(3deg); }
+        }
+
+        .blog-404-text {
+            color: var(--text-light);
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .blog-404-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 40px;
+            background: var(--gradient-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .blog-404-btn:hover {
+            gap: 20px;
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-blue);
+        }
+    </style>
+</head>
+<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Video Background */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Dark Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        /* Content */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            color: white;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            margin: 0 auto;
+        }
+
+        /* Main Text */
+        .hero-text {
+            margin-bottom: 40px;
+        }
+
+        .hero-text .line1 {
+            font-size: 48px;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 {
+            font-size: 68px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .hero-text .line2 span {
+            display: block;
+        }
+
+        .hero-text .line3 {
+            font-size: 58px;
+            font-weight: 700;
+            line-height: 1.1;
+            color: #3b82f6;
+        }
+
+        .hero-text .line3 span {
+            display: block;
+        }
+
+        /* See how link */
+        .see-how {
+            margin-bottom: 60px;
+        }
+
+        .see-how a {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .see-how a:hover {
+            gap: 15px;
+            border-bottom-color: white;
+        }
+
+        .see-how i {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+
+        /* Follow us */
+        .follow-us {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .follow-us span {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .social-icons a:hover {
+            opacity: 1;
+            color: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-text .line1 {
+                font-size: 40px;
+            }
+            .hero-text .line2 {
+                font-size: 55px;
+            }
+            .hero-text .line3 {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 0 30px;
+            }
+            .hero-text .line1 {
+                font-size: 32px;
+            }
+            .hero-text .line2 {
+                font-size: 42px;
+            }
+            .hero-text .line3 {
+                font-size: 38px;
+            }
+            .see-how a {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding: 0 20px;
+            }
+            .hero-text .line1 {
+                font-size: 26px;
+            }
+            .hero-text .line2 {
+                font-size: 34px;
+            }
+            .hero-text .line3 {
+                font-size: 30px;
+            }
+            .see-how {
+                margin-bottom: 40px;
+            }
+            .follow-us {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <!-- Video Background -->
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source src="10066-222361320_medium.mp4" type="video/mp4">
+                <!-- Fallback for browsers that don't support video -->
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Dark Overlay -->
+        <div class="overlay"></div>
+
+        <!-- Content -->
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="line1">Stackly Payment Gateway –</div>
+                <div class="line2">
+                    <span>so you can</span>
+                </div>
+                <div class="line3">
+                    <span>Fast, Secure & Smart Payments.</span>
+                </div>
+            </div>
+
+            <div class="see-how">
+                <a href="404.html">See how <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="follow-us">
+                <span>Follow us</span>
+                <div class="social-icons">
+                    <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="404.html"><i class="fab fa-twitter"></i></a>
+                    <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+                    <a href="404.html"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+        <!-- Featured Post -->
+        <section class="featured-post">
+            <div class="featured-card reveal">
+                <div class="featured-image">
+                    <span class="featured-image-overlay">Featured</span>
+                    <img src="fastticket.webp" alt="Featured Post">
+                </div>
+                <div class="featured-content">
+                    <div class="featured-category">🔒 SECURITY</div>
+                    <h2 class="featured-title">The Future of Digital Payments: 2024 Trends and Predictions</h2>
+                    <p class="featured-excerpt">
+                        Discover how AI, blockchain, and biometric authentication are reshaping the payment landscape. 
+                        Our experts share insights on what's coming next in the world of financial technology.
+                    </p>
+                    <div class="featured-meta">
+                        <span><i class="far fa-user"></i> By Sarah Johnson</span>
+                        <span><i class="far fa-calendar"></i> March 15, 2024</span>
+                        <span><i class="far fa-clock"></i> 8 min read</span>
+                    </div>
+                    <button class="featured-btn" onclick="openBlogDetails('featured')">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technology Section -->
+        <section class="category-section">
+            <div class="category-header reveal">
+                <h2 class="category-title">💻 Technology & Innovation</h2>
+                <a href="404.html" class="category-view-all" onclick="show404(event)">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="blog-grid">
+                <!-- Tech Card 1 -->
+                <div class="blog-card tech-card reveal">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">TECH</span>
+                        <img src="blog1.webp" alt="AI Technology">
+                    </div>
+                    <div class="blog-card-content">
+                        <div class="tech-icon"><i class="fas fa-robot"></i></div>
+                        <h3 class="blog-card-title">How AI is Revolutionizing Fraud Detection</h3>
+                        <p class="blog-card-excerpt">
+                            Machine learning algorithms now detect fraudulent transactions in milliseconds with 99.9% accuracy.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr4.webp" alt="Author">
+                                Alex Chen
+                            </span>
+                            <span>5 min read</span>
+                        </div>
+                        <a href="404.html" class="blog-card-btn" onclick="show404(event)">Read More</a>
+                    </div>
+                </div>
+
+                <!-- Tech Card 2 -->
+                <div class="blog-card tech-card reveal" data-delay="0.2s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">BLOCKCHAIN</span>
+                        <img src="pav6.webp" alt="Blockchain">
+                    </div>
+                    <div class="blog-card-content">
+                        <div class="tech-icon"><i class="fas fa-link"></i></div>
+                        <h3 class="blog-card-title">Blockchain in Payments: Beyond Cryptocurrency</h3>
+                        <p class="blog-card-excerpt">
+                            Exploring how distributed ledger technology is creating transparent and instant settlement systems.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr3.webp" alt="Author">
+                                Maria Garcia
+                            </span>
+                            <span>7 min read</span>
+                        </div>
+                        <a href="404.html" class="blog-card-btn" onclick="show404(event)">Read More</a>
+                    </div>
+                </div>
+
+                <!-- Tech Card 3 -->
+                <div class="blog-card tech-card reveal" data-delay="0.4s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">BIOMETRICS</span>
+                        <img src="digital2.webp" alt="Biometrics">
+                    </div>
+                    <div class="blog-card-content">
+                        <div class="tech-icon"><i class="fas fa-fingerprint"></i></div>
+                        <h3 class="blog-card-title">The Rise of Biometric Authentication</h3>
+                        <p class="blog-card-excerpt">
+                            From fingerprint to facial recognition - how biometrics are making payments more secure.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr11.webp" alt="Author">
+                                David Kim
+                            </span>
+                            <span>6 min read</span>
+                        </div>
+                        <a href="404.html" class="blog-card-btn" onclick="show404(event)">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture & Engineering Section -->
+        <section class="category-section">
+            <div class="category-header reveal">
+                <h2 class="category-title">🏗️ Architecture & Engineering</h2>
+                <a href="#" class="category-view-all" onclick="show404(event)">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="blog-grid">
+                <!-- Arch Card 1 -->
+                <div class="blog-card arch-card reveal">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">SYSTEM DESIGN</span>
+                        <img src="digital4.webp" alt="System Architecture">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">Building Scalable Payment Infrastructure</h3>
+                        <p class="blog-card-excerpt">
+                            How we designed Stackly's architecture to handle millions of transactions per second.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr12.webp" alt="Author">
+                                Michael Zhang
+                            </span>
+                            <span>10 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Arch Card 2 -->
+                <div class="blog-card arch-card reveal" data-delay="0.2s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">MICROSERVICES</span>
+                        <img src="digital7.webp" alt="Microservices">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">Microservices Architecture for Payment Gateways</h3>
+                        <p class="blog-card-excerpt">
+                            Breaking down monolithic systems into scalable, independent services.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr13.webp" alt="Author">
+                                Sarah Williams
+                            </span>
+                            <span>8 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Arch Card 3 -->
+                <div class="blog-card arch-card reveal" data-delay="0.4s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">DATABASE</span>
+                        <img src="digital19.webp" alt="Database">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">Database Optimization for High-Volume Transactions</h3>
+                        <p class="blog-card-excerpt">
+                            Techniques for maintaining performance during peak payment periods.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr21.webp" alt="Author">
+                                James Wilson
+                            </span>
+                            <span>7 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mobile Section -->
+        <section class="category-section">
+            <div class="category-header reveal">
+                <h2 class="category-title">📱 Mobile & Digital Wallet</h2>
+                <a href="#" class="category-view-all" onclick="show404(event)">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="blog-grid">
+                <!-- Mobile Card 1 -->
+                <div class="blog-card mobile-card reveal">
+                    <div class="blog-card-image">
+                        <span class="mobile-badge">NEW</span>
+                        <span class="blog-card-category">MOBILE</span>
+                        <img src="digital20.webp" alt="Mobile Payment">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">The Evolution of Mobile Wallets</h3>
+                        <p class="blog-card-excerpt">
+                            How smartphones are replacing physical wallets and what it means for businesses.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr24.webp" alt="Author">
+                                Lisa Brown
+                            </span>
+                            <span>5 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Card 2 -->
+                <div class="blog-card mobile-card reveal" data-delay="0.2s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">UX</span>
+                        <img src="digital22.webp" alt="Mobile UX">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">Designing Mobile-First Payment Experiences</h3>
+                        <p class="blog-card-excerpt">
+                            UX principles that increase mobile payment conversion rates.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr26.webp" alt="Author">
+                                Tom Harris
+                            </span>
+                            <span>6 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Card 3 -->
+                <div class="blog-card mobile-card reveal" data-delay="0.4s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">NFC</span>
+                        <img src="digital34.webp" alt="NFC Payment">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">Tap to Pay: The Rise of Contactless</h3>
+                        <p class="blog-card-excerpt">
+                            How NFC technology is changing the way we pay in stores.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="Hr.webp" alt="Author">
+                                Emma Davis
+                            </span>
+                            <span>4 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- People Stories Section -->
+        <section class="category-section">
+            <div class="category-header reveal">
+                <h2 class="category-title">👥 People Stories</h2>
+                <a href="#" class="category-view-all" onclick="show404(event)">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="blog-grid">
+                <!-- Story Card 1 -->
+                <div class="blog-card story-card reveal">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">ENTREPRENEUR</span>
+                        <img src="digital42.webp" alt="Entrepreneur">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">From Startup to Unicorn: The Stackly Journey</h3>
+                        <div class="story-quote">
+                            "We started in a garage, now we process billions in payments."
+                        </div>
+                        <p class="blog-card-excerpt">
+                            The inspiring story of how Stackly grew from a small team to a global payment leader.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr1.webp" alt="Author">
+                                John Smith
+                            </span>
+                            <span>12 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read Story <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Story Card 2 -->
+                <div class="blog-card story-card reveal" data-delay="0.2s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">MERCHANT</span>
+                        <img src="digital7.webp" alt="Merchant">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">How a Small Bakery Scaled with Stackly</h3>
+                        <div class="story-quote">
+                            "Our sales tripled after implementing Stackly's payment solutions."
+                        </div>
+                        <p class="blog-card-excerpt">
+                            A local bakery's journey from cash-only to accepting global payments.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr6.webp" alt="Author">
+                                Maria Rodriguez
+                            </span>
+                            <span>6 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read Story <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Story Card 3 -->
+                <div class="blog-card story-card reveal" data-delay="0.4s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">DEVELOPER</span>
+                        <img src="digital38.webp" alt="Developer">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">Life of a Payment Gateway Developer</h3>
+                        <div class="story-quote">
+                            "Every day brings new challenges in security and scalability."
+                        </div>
+                        <p class="blog-card-excerpt">
+                            A day in the life of Stackly's engineering team and the challenges they solve.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr11.webp" alt="Author">
+                                Alex Thompson
+                            </span>
+                            <span>8 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Read Story <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Related Section -->
+        <section class="category-section">
+            <div class="category-header reveal">
+                <h2 class="category-title">📦 Product Updates & Features</h2>
+                <a href="#" class="category-view-all" onclick="show404(event)">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <div class="blog-grid">
+                <!-- Product Card 1 -->
+                <div class="blog-card reveal">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">NEW FEATURE</span>
+                        <img src="digital42.webp" alt="Product">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">Introducing Stackly Analytics 2.0</h3>
+                        <div class="product-stats">
+                            <div class="product-stat">
+                                <div class="product-stat-value">50%</div>
+                                <div class="product-stat-label">Faster Insights</div>
+                            </div>
+                            <div class="product-stat">
+                                <div class="product-stat-value">15+</div>
+                                <div class="product-stat-label">New Metrics</div>
+                            </div>
+                        </div>
+                        <p class="blog-card-excerpt">
+                            Powerful new analytics tools to help you understand your payment data better.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="Hr.webp" alt="Author">
+                                Product Team
+                            </span>
+                            <span>4 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Learn More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="blog-card reveal" data-delay="0.2s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">INTEGRATION</span>
+                        <img src="digital35.webp" alt="Integration">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">New Shopify Integration</h3>
+                        <div class="product-stats">
+                            <div class="product-stat">
+                                <div class="product-stat-value">10K+</div>
+                                <div class="product-stat-label">Merchants</div>
+                            </div>
+                            <div class="product-stat">
+                                <div class="product-stat-value">30%</div>
+                                <div class="product-stat-label">Faster Setup</div>
+                            </div>
+                        </div>
+                        <p class="blog-card-excerpt">
+                            Seamless integration with Shopify stores for better payment processing.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr1.webp" alt="Author">
+                                Partnerships Team
+                            </span>
+                            <span>3 min read</span>
+                        </div>
+                        <a href="404.html" class="blog-card-btn" onclick="show404(event)">Read More</a>
+                            Learn More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="blog-card reveal" data-delay="0.4s">
+                    <div class="blog-card-image">
+                        <span class="blog-card-category">API</span>
+                        <img src="digital39.webp" alt="API">
+                    </div>
+                    <div class="blog-card-content">
+                        <h3 class="blog-card-title">API v3: What's New</h3>
+                        <div class="product-stats">
+                            <div class="product-stat">
+                                <div class="product-stat-value">2x</div>
+                                <div class="product-stat-label">Faster</div>
+                            </div>
+                            <div class="product-stat">
+                                <div class="product-stat-value">20+</div>
+                                <div class="product-stat-label">New Endpoints</div>
+                            </div>
+                        </div>
+                        <p class="blog-card-excerpt">
+                            Our most powerful API update yet with improved performance and features.
+                        </p>
+                        <div class="blog-card-meta">
+                            <span class="blog-card-author">
+                                <img src="hr4.webp" alt="Author">
+                                Dev Team
+                            </span>
+                            <span>5 min read</span>
+                        </div>
+                        <button class="blog-card-btn" onclick="show404(event)">
+                            Learn More <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 404 Page Modal -->
+        <div class="blog-404" id="blog404" style="display: none;">
+            <div class="blog-404-icon">
+                <i class="fas fa-map-signs"></i>
+            </div>
+            <h1 class="blog-404-title">404</h1>
+            <p class="blog-404-text">
+                Oops! This page is still under construction.<br>
+                But don't worry, our blog has plenty of great content to explore!
+            </p>
+            <button class="blog-404-btn" onclick="hide404()">
+                <i class="fas fa-arrow-left"></i> Back to Blog
+            </button>
+        </div>
+    </div>
+
+    <!-- Blog Details Modal -->
+    <div class="blog-details-modal" id="blogDetailsModal">
+        <div class="blog-details-content">
+            <div class="blog-details-image">
+                <span class="blog-details-close" onclick="closeBlogDetails()"><i class="fas fa-times"></i></span>
+                <img src="digital42.webp" alt="Blog Details">
+            </div>
+            <div class="blog-details-body">
+                <div class="blog-details-category" style="color: var(--primary-blue); font-weight: 600; margin-bottom: 15px;">🔒 SECURITY</div>
+                <h1 class="blog-details-title">The Future of Digital Payments: 2024 Trends and Predictions</h1>
+                <div class="blog-details-meta">
+                    <span><i class="far fa-user"></i> By Sarah Johnson</span>
+                    <span><i class="far fa-calendar"></i> March 15, 2024</span>
+                    <span><i class="far fa-clock"></i> 8 min read</span>
+                </div>
+                
+                <div class="blog-details-text">
+                    <p>
+                        The payments landscape is evolving faster than ever before. With advancements in artificial intelligence, 
+                        blockchain technology, and biometric authentication, we're witnessing a transformation in how money moves 
+                        around the world.
+                    </p>
+                    
+                    <p>
+                        In this comprehensive guide, we'll explore the key trends shaping the future of digital payments and what 
+                        they mean for businesses and consumers alike.
+                    </p>
+
+                    <div class="blog-details-quote">
+                        By 2025, digital payments are expected to reach $10 trillion in transaction value globally.
+                    </div>
+
+                    <h3 style="margin: 30px 0 15px; color: var(--text-dark);">1. AI-Powered Fraud Detection</h3>
+                    <p>
+                        Machine learning algorithms are becoming increasingly sophisticated at identifying fraudulent transactions 
+                        in real-time. Stackly's AI systems now analyze over 100 data points per transaction, achieving a 99.9% 
+                        accuracy rate in fraud detection.
+                    </p>
+
+                    <h3 style="margin: 30px 0 15px; color: var(--text-dark);">2. Biometric Authentication</h3>
+                    <p>
+                        Fingerprint scanners, facial recognition, and even voice authentication are replacing traditional passwords. 
+                        This not only enhances security but also improves the user experience by making payments frictionless.
+                    </p>
+
+                    <h3 style="margin: 30px 0 15px; color: var(--text-dark);">3. Blockchain and Instant Settlements</h3>
+                    <p>
+                        Distributed ledger technology is enabling near-instant settlements between parties, reducing the time it 
+                        takes for merchants to receive their funds from days to seconds.
+                    </p>
+                </div>
+
+                <div class="blog-details-tags">
+                    <span class="blog-tag">#Payments</span>
+                    <span class="blog-tag">#Technology</span>
+                    <span class="blog-tag">#Future</span>
+                    <span class="blog-tag">#AI</span>
+                    <span class="blog-tag">#Blockchain</span>
+                </div>
+
+                <div class="blog-details-share">
+                    <a href="#" class="share-btn" onclick="show404(event)"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="share-btn" onclick="show404(event)"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="share-btn" onclick="show404(event)"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="share-btn" onclick="show404(event)"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Scroll Reveal Animation
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+            
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveals[i].getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (revealTop < windowHeight - revealPoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
+        window.addEventListener('scroll', reveal);
+        window.addEventListener('load', reveal);
+
+        // Show 404 Page
+        function show404(event) {
+            event.preventDefault();
+            const blog404 = document.getElementById('blog404');
+            blog404.style.display = 'block';
+            blog404.style.animation = 'fadeIn 0.5s';
+            
+            // Hide after 3 seconds
+            setTimeout(hide404, 3000);
+        }
+
+        function hide404() {
+            const blog404 = document.getElementById('blog404');
+            blog404.style.animation = 'fadeOut 0.5s';
+            setTimeout(() => {
+                blog404.style.display = 'none';
+            }, 500);
+        }
+
+        // Open Blog Details
+        function openBlogDetails(postId) {
+            const modal = document.getElementById('blogDetailsModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBlogDetails() {
+            const modal = document.getElementById('blogDetailsModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeBlogDetails();
+            }
+        });
+
+        // Click outside to close
+        document.getElementById('blogDetailsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBlogDetails();
+            }
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.blog-hero-search input');
+        const searchButton = document.querySelector('.blog-hero-search button');
+
+        searchButton.addEventListener('click', function() {
+            if (searchInput.value.trim() !== '') {
+                show404(new Event('click'));
+            }
+        });
+
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.trim() !== '') {
+                show404(e);
+            }
+        });
+
+        // Newsletter form
+        const newsletterForm = document.querySelector('.newsletter-form');
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            show404(e);
+        });
+
+        // View all links
+        document.querySelectorAll('.category-view-all').forEach(link => {
+            link.addEventListener('click', show404);
+        });
+
+        // Share buttons
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', show404);
+        });
+
+        // Custom cursor (optional)
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.9); }
+                to { opacity: 1; transform: scale(1); }
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; transform: scale(1); }
+                to { opacity: 0; transform: scale(0.9); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    <script>
+function show404(event){
+event.preventDefault(); 
+window.location.href="404.html";
+}
+</script>
+</body>
+</html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* ===== PREMIUM PAYMENT GATEWAY FOOTER ===== */
+    .footer {
+      background: #0f1a2b;  /* deep black-blue */
+      color: #e6ecf5;
+      border-top: 4px solid #2b6cff;
+      position: relative;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(0,0,0,0.3);
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #2b6cff, #ffffff, #2b6cff);
+      opacity: 0.5;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+    }
+
+    /* Footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #2b6cff;
+      border-radius: 2px;
+    }
+
+    /* Brand column with logo image */
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-logo img {
+      height: auto;
+      width: 150px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* makes white logo - remove if logo is colored */
+    }
+
+    .footer-about {
+      color: #b0c6e0;
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+
+    /* Social media icons - 4 items */
+    .footer-social {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1f2f44;
+      color: #2b6cff;
+      font-size: 1.3rem;
+      transition: 0.25s;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+
+    .footer-social a:hover {
+      background: #2b6cff;
+      color: white;
+      transform: translateY(-5px);
+      border-color: white;
+    }
+
+    /* Links columns */
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul li a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .footer-col ul li a i {
+      color: #2b6cff;
+      font-size: 0.8rem;
+      width: 18px;
+    }
+
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* Contact column */
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #c9d9f0;
+    }
+
+    .contact-item i {
+      width: 24px;
+      color: #2b6cff;
+      font-size: 1.1rem;
+    }
+
+    .payment-badges {
+      display: flex;
+      gap: 10px;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #1f2f44;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      border: 1px solid #2b6cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge i {
+      color: #2b6cff;
+    }
+
+    /* Newsletter - IMPROVED MOBILE VERSION */
+    .newsletter {
+      margin-top: 1.5rem;
+    }
+
+    .newsletter h4 {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .newsletter-box {
+      display: flex;
+      background: #1a2538;
+      border-radius: 60px;
+      overflow: hidden;
+      border: 2px solid #2b6cff;
+      width: 100%;
+    }
+
+    .newsletter-box input {
+      flex: 1;
+      min-width: 0; /* prevents overflow on mobile */
+      padding: 0.9rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .newsletter-box input::placeholder {
+      color: #8a9fc0;
+    }
+
+    .newsletter-box button {
+      background: #2b6cff;
+      border: none;
+      padding: 0 1.2rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      border-left: 2px solid white;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: auto;
+    }
+
+    .newsletter-box button i {
+      font-size: 0.9rem;
+    }
+
+    .newsletter-box button:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+      background: #0a1320;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1f3a70;
+      color: #9bb0d0;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom .legal-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom .legal-links a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .legal-links a:hover {
+      color: #2b6cff;
+    }
+
+    .footer-bottom .payment-icons i {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      color: #5f7d9e;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .payment-icons i:hover {
+      color: #2b6cff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem 1.5rem;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .footer-bottom .legal-links {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .footer-bottom .payment-icons {
+        margin-top: 0.5rem;
+      }
+      
+      .footer-bottom .payment-icons i {
+        margin: 0 0.5rem;
+      }
+      
+      /* Improved mobile newsletter */
+      .newsletter-box {
+        flex-direction: column;
+        border-radius: 30px;
+      }
+      
+      .newsletter-box input {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 2px solid #2b6cff;
+      }
+      
+      .newsletter-box button {
+        width: 100%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 2px solid white;
+        justify-content: center;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 380px) {
+      .footer-social {
+        gap: 10px;
+      }
+      
+      .footer-social a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      
+      .badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PREMIUM FOOTER - PAYMENT GATEWAY STYLE -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Column 1: Brand with logo image -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <!-- Logo image - replace src with your actual logo -->
+          <img src="stacklylogo (3).webp" alt="Stackly Pay" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span style="display:none; font-size:1.8rem; font-weight:700; color:white;">STACKLY<span style="color:#2b6cff;">pay</span></span>
+        </div>
+        <p class="footer-about">
+          Enterprise-grade payment gateway processing billions in transactions. Secure, scalable, and built for growth.
+        </p>
+        <!-- 4 SOCIAL MEDIA ICONS -->
+        <div class="footer-social">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+         
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+          <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <!-- Column 2: Solutions (all links to 404) -->
+      <div class="footer-col">
+        <h3>Solutions</h3>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="soluation.html"><i class="fas fa-chevron-right"></i> Soluation</a></li>
+          <li><a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+          <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+          <li><a href="about.html"><i class="fas fa-chevron-right"></i> About</a></li>
+          <li><a href="blog.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Company (all links to 404) -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Press</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact & Newsletter with validation -->
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <div class="contact-item">
+          <i class="fas fa-map-pin"></i>
+          <span>100 Financial District, Bengaluru, India 571426</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>+91 9568759723</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>hello@stacklypay.com</span>
+        </div>
+
+        <!-- Payment badges -->
+        <div class="payment-badges">
+          <span class="badge"><i class="fab fa-cc-visa"></i> Visa</span>
+          <span class="badge"><i class="fab fa-cc-mastercard"></i> MC</span>
+          <span class="badge"><i class="fab fa-cc-amex"></i> Amex</span>
+        </div>
+
+        <!-- Newsletter with email validation -->
+        <div class="newsletter">
+          <h4>Stay updated</h4>
+          <div class="newsletter-box">
+            <input type="email" placeholder="your@email.com" id="newsletterEmail">
+            <button id="subscribeBtn"><i class="fas fa-paper-plane"></i> Subscribe</button>
+          </div>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom (all links to 404) -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2026 Stackly Pay. All rights reserved.
+      </div>
+      <div class="legal-links">
+        <a href="404.html">Privacy Policy</a>
+        <a href="404.html">Terms of Service</a>
+        <a href="404.html">Cookie Policy</a>
+        <a href="404.html">GDPR</a>
+      </div>
+      <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-amex"></i>
+        <i class="fab fa-cc-paypal"></i>
+        <i class="fab fa-cc-stripe"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Email validation and redirect to 404
+      const emailInput = document.getElementById('newsletterEmail');
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const emailError = document.getElementById('emailError');
+
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      function handleSubscribe() {
+        const email = emailInput.value.trim();
+        
+        if (email === '' || !validateEmail(email)) {
+          emailError.classList.add('show');
+        } else {
+          emailError.classList.remove('show');
+          // Redirect to 404 page
+          window.location.href = '404.html';
+        }
+      }
+
+      if (subscribeBtn && emailInput) {
+        subscribeBtn.addEventListener('click', handleSubscribe);
+        
+        emailInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            handleSubscribe();
+          }
+        });
+
+        // Clear error when user starts typing
+        emailInput.addEventListener('input', () => {
+          emailError.classList.remove('show');
+        });
+      }
+
+      // All footer links already point to 404.html
+    })();
+  </script>
+</body>
+</html>

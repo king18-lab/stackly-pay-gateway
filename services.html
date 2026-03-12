@@ -1,0 +1,2979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Stackly • 100% cover mobile menu (no search)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      color: #1e1e2f;
+      min-height: 100vh;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      background: #0f1a2b;
+      border-bottom: 4px solid #2b6cff;
+      padding: 0.5rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      box-shadow: 0 8px 20px -8px rgba(0,0,0,0.5);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 70px;
+    }
+
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    .logo img {
+      height: auto;
+      width: 140px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    /* Desktop menu - hidden on mobile */
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 0.3rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e6ecf5;
+      font-weight: 500;
+      padding: 0.6rem 1rem;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .nav-link i {
+      color: #2b6cff;
+      font-size: 1rem;
+    }
+
+    .nav-link:hover {
+      background: rgba(43, 108, 255, 0.15);
+      border-color: #2b6cff;
+      color: white;
+    }
+
+    /* Dropdown desktop */
+    .nav-item {
+      position: relative;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #0f1a2b;
+      min-width: 220px;
+      border-radius: 20px;
+      padding: 0.6rem 0;
+      box-shadow: 0 25px 35px -12px #000000cc, 0 0 0 1px #2b6cff;
+      border: 1px solid #2b6cff;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      transition: 0.25s ease;
+      z-index: 100;
+    }
+
+    .dropdown-content.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(6px);
+    }
+
+    .dropdown-content a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d3e0ff;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .dropdown-content a i {
+      width: 22px;
+      color: #2b6cff;
+    }
+
+    .dropdown-content a:hover {
+      background: #1a2f4a;
+      border-left-color: #2b6cff;
+      color: white;
+    }
+
+    /* Desktop right side - ONLY LOGIN (search removed) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .login-btn {
+      background: transparent;
+      border: 2px solid #2b6cff;
+      border-radius: 60px;
+      padding: 0.6rem 1.5rem;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 0.95rem;
+    }
+
+    .login-btn i {
+      font-size: 1rem;
+    }
+
+    .login-btn:hover {
+      background: #2b6cff;
+      color: white;
+      border-color: white;
+    }
+
+    /* Hamburger - perfect for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 48px;
+      height: 48px;
+      background: #1f2b3f;
+      border-radius: 16px;
+      border: 2px solid #2b6cff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .hamburger:hover {
+      background: #2b6cff;
+    }
+    
+    .hamburger span {
+      width: 26px;
+      height: 3px;
+      background: white;
+      margin: 3px 0;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    /* ===== 100% COVER MOBILE DRAWER (FULL SCREEN) ===== */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      z-index: 2999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+    .drawer-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;        /* 100% width */
+      height: 100vh;       /* 100% height */
+      background: #0a1322;
+      z-index: 3000;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+      border-right: none;   /* no border, full coverage */
+      box-shadow: none;
+      overflow-y: auto;
+    }
+
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #1f3a70;
+      padding-bottom: 1.2rem;
+    }
+
+    .drawer-logo img {
+      height: auto;
+      width: 150px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .close-drawer {
+      background: #1f3a70;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: white;
+      cursor: pointer;
+      border: 2px solid #2b6cff;
+      transition: 0.2s;
+    }
+    
+    .close-drawer:hover {
+      background: #2b6cff;
+    }
+
+    .mobile-menu {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .mobile-item {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: #eef4ff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .mobile-item i {
+      color: #2b6cff;
+      width: 28px;
+      font-size: 1.3rem;
+    }
+    
+    .mobile-item:hover {
+      background: #1f3a70;
+      transform: translateX(8px);
+    }
+
+    .mobile-dropdown {
+      margin-bottom: 0;
+    }
+    
+    .mobile-dropdown-toggle {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 1.1rem 1.5rem;
+      background: #132132;
+      border-radius: 60px;
+      border: 2px solid #2b6cff;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 500;
+      cursor: pointer;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+    
+    .mobile-dropdown-toggle:hover {
+      background: #1f3a70;
+    }
+    
+    .mobile-submenu {
+      display: none;
+      margin-left: 1.2rem;
+      margin-top: 10px;
+      padding-left: 1rem;
+      border-left: 4px solid #2b6cff;
+    }
+    
+    .mobile-submenu a {
+      display: block;
+      padding: 1rem 1.5rem;
+      background: #0e1a2a;
+      border-radius: 50px;
+      margin: 8px 0;
+      color: #b9d0ff;
+      text-decoration: none;
+      border-left: 4px solid transparent;
+      font-size: 1.1rem;
+    }
+    
+    .mobile-submenu a i {
+      margin-right: 12px;
+      color: #2b6cff;
+      width: 24px;
+    }
+    
+    .mobile-submenu a:hover {
+      background: #1f2f4a;
+      border-left-color: #2b6cff;
+    }
+    
+    .mobile-dropdown.open .mobile-submenu {
+      display: block;
+    }
+
+    /* Mobile login button - bigger for full screen */
+    .mobile-login {
+      background: #2b6cff;
+      border: none;
+      border-radius: 60px;
+      padding: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 2rem;
+      text-decoration: none;
+      border: 2px solid white;
+      transition: 0.2s;
+    }
+    
+    .mobile-login:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+    
+    .mobile-login i {
+      color: #0f1a2b;
+      font-size: 1.3rem;
+    }
+
+    /* RESPONSIVE: show hamburger on mobile */
+    @media screen and (max-width: 1024px) {
+      .nav-menu, .nav-actions {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .navbar {
+        padding: 0.3rem 1rem;
+      }
+    }
+
+    /* Small phones adjustments */
+    @media screen and (max-width: 400px) {
+      .logo img {
+        width: 120px;
+      }
+      .hamburger {
+        width: 44px;
+        height: 44px;
+      }
+      .mobile-drawer {
+        padding: 1.5rem 1rem;
+      }
+      .mobile-item, .mobile-dropdown-toggle {
+        padding: 0.9rem 1.2rem;
+        font-size: 1.1rem;
+      }
+      .close-drawer {
+        width: 48px;
+        height: 48px;
+        font-size: 2rem;
+      }
+    }
+
+    /* Demo content */
+    .demo-content {
+      max-width: 900px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 40px;
+      border: 2px solid #2b6cff;
+      text-align: center;
+    }
+    .demo-content h1 {
+      color: #0f1a2b;
+      margin-bottom: 1rem;
+    }
+    .cover-note {
+      background: #2b6cff20;
+      padding: 1.2rem;
+      border-radius: 30px;
+      color: #0f1a2b;
+      margin-top: 2rem;
+      border: 2px dashed #2b6cff;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR (DESKTOP + MOBILE HAMBURGER) ===== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="stacklylogo (3).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- Desktop menu (hidden on mobile) -->
+      <ul class="nav-menu">
+        <li class="nav-item" id="desktopDropdown">
+          <a class="nav-link" id="desktopDropdownToggle">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="dropdown-content" id="desktopDropdownMenu">
+            <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+            <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+          </div>
+        </li>
+        <li><a href="soluation.html" class="nav-link"><i class="fas fa-compass"></i> Solutions</a></li>
+        <li><a href="dashboard.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+        <li><a href="services.html" class="nav-link"><i class="fas fa-cogs"></i> Services</a></li>
+        <li><a href="about.html" class="nav-link"><i class="fas fa-users"></i> About</a></li>
+        <li><a href="blog.html" class="nav-link"><i class="fas fa-blog"></i> Blog</a></li>
+      </ul>
+
+      <!-- Desktop actions: ONLY LOGIN (search removed) -->
+      <div class="nav-actions">
+        <a href="login.html" class="login-btn"><i class="fas fa-user"></i> Login</a>
+      </div>
+
+      <!-- Hamburger for mobile -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay (semi-transparent) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  
+  <!-- 100% COVER MOBILE DRAWER - FULL SCREEN -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="stacklylogo (3).webp" alt="logo">
+      </div>
+      <div class="close-drawer" id="closeDrawer"><i class="fas fa-times"></i></div>
+    </div>
+
+    <div class="mobile-menu">
+      <!-- Mobile dropdown for Home -->
+      <div class="mobile-dropdown" id="mobileDropdown">
+        <div class="mobile-dropdown-toggle" id="mobileDropdownToggle">
+          <span><i class="fas fa-home"></i> Home</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="mobile-submenu">
+          <a href="index.html"><i class="fas fa-compass"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-chart-pie"></i> Home2</a>
+        </div>
+      </div>
+
+      <a href="soluation.html" class="mobile-item"><i class="fas fa-compass"></i> Solutions</a>
+      <a href="dashboard.html" class="mobile-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="services.html" class="mobile-item"><i class="fas fa-cogs"></i> Services</a>
+      <a href="about.html" class="mobile-item"><i class="fas fa-users"></i> About</a>
+      <a href="blog.html" class="mobile-item"><i class="fas fa-blog"></i> Blog</a>
+    </div>
+
+    <!-- Mobile login button (big and prominent) -->
+    <a href="login.html" class="mobile-login"><i class="fas fa-user"></i> Login</a>
+  </div>
+
+
+  <script>
+    (function() {
+      // ===== DESKTOP DROPDOWN =====
+      const desktopToggle = document.getElementById('desktopDropdownToggle');
+      const desktopMenu = document.getElementById('desktopDropdownMenu');
+      const desktopItem = document.getElementById('desktopDropdown');
+
+      if (desktopToggle && desktopMenu) {
+        desktopToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+          const chevron = desktopToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = desktopMenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!desktopItem.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+            const chevron = desktopToggle.querySelector('.fa-chevron-down');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+
+      // ===== MOBILE DRAWER - FULL SCREEN =====
+      const hamburger = document.getElementById('hamburgerBtn');
+      const drawer = document.getElementById('mobileDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const closeBtn = document.getElementById('closeDrawer');
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // prevent background scroll
+      }
+      
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (hamburger) hamburger.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (overlay) overlay.addEventListener('click', closeDrawer);
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+      });
+
+      // ===== MOBILE DROPDOWN TOGGLE =====
+      const mobileToggle = document.getElementById('mobileDropdownToggle');
+      const mobileDropdown = document.getElementById('mobileDropdown');
+      
+      if (mobileToggle && mobileDropdown) {
+        mobileToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileDropdown.classList.toggle('open');
+          const chevron = mobileToggle.querySelector('.fa-chevron-down');
+          if (chevron) {
+            chevron.style.transform = mobileDropdown.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+          }
+        });
+      }
+
+      // No search functionality - verified
+      console.log('100% cover mobile menu ready');
+    })();
+  </script>
+</body>
+</html>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #60a5fa;
+            --accent-blue: #3b82f6;
+            --pure-white: #ffffff;
+            --off-white: #f8fafc;
+            --light-gray: #f1f5f9;
+            --medium-gray: #e2e8f0;
+            --dark-gray: #334155;
+            --text-dark: #0f172a;
+            --text-light: #475569;
+            --success-green: #10b981;
+            --warning-yellow: #f59e0b;
+            --gradient-blue: linear-gradient(135deg, #2563eb, #1e40af);
+            --gradient-light: linear-gradient(135deg, #ffffff, #f1f5f9);
+            --gradient-purple: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            --gradient-teal: linear-gradient(135deg, #14b8a6, #0d9488);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-blue: 0 10px 30px -5px rgba(37, 99, 235, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--pure-white);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-scale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-subtitle {
+            color: var(--primary-blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-subtitle::before,
+        .section-subtitle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 2px;
+            background: var(--primary-blue);
+        }
+
+        .section-subtitle::before {
+            right: 100%;
+            margin-right: 15px;
+        }
+
+        .section-subtitle::after {
+            left: 100%;
+            margin-left: 15px;
+        }
+
+        .section-title {
+            font-size: 42px;
+            margin-bottom: 20px;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-description {
+            color: var(--text-light);
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Hero Section */
+        .services-hero {
+            padding: 80px 0 60px;
+            background: linear-gradient(135deg, var(--pure-white) 0%, var(--light-gray) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .services-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .services-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, 20px) scale(1.05); }
+        }
+
+        .services-hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .services-hero-text {
+            padding-right: 30px;
+        }
+
+        .services-hero-badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-blue);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .services-hero-title {
+            font-size: 52px;
+            line-height: 1.2;
+            margin-bottom: 25px;
+        }
+
+        .services-hero-title span {
+            color: var(--primary-blue);
+            position: relative;
+            display: inline-block;
+        }
+
+        .services-hero-title span::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(37, 99, 235, 0.2);
+            z-index: -1;
+        }
+
+        .services-hero-description {
+            color: var(--text-light);
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .services-hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .services-hero-stat-item {
+            text-align: left;
+        }
+
+        .services-hero-stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .services-hero-stat-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .services-hero-image {
+            position: relative;
+        }
+
+        .services-hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.5s;
+        }
+
+        .services-hero-image:hover img {
+            transform: scale(1.02) translateY(-10px);
+        }
+
+        .services-hero-shape {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 150px;
+            height: 150px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: -1;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Services Grid */
+        .services-section {
+            padding: 80px 0;
+            background: var(--pure-white);
+        }
+
+        .services-section:nth-child(even) {
+            background: linear-gradient(135deg, var(--light-gray), var(--pure-white));
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background: var(--pure-white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.5s;
+            cursor: pointer;
+            border: 1px solid var(--light-gray);
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px) scale(102%);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-blue);
+        }
+
+        .service-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .service-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s;
+        }
+
+        .service-card:hover .service-image img {
+            transform: scale(1.2);
+        }
+
+        .service-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .service-content {
+            padding: 25px;
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 24px;
+            transition: all 0.5s;
+        }
+
+        .service-card:hover .service-icon {
+            transform: rotateY(360deg);
+        }
+
+        .service-title {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .service-description {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .service-features li {
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .service-features li i {
+            color: var(--primary-blue);
+            font-size: 12px;
+        }
+
+        .service-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .service-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            gap: 15px;
+        }
+
+        /* Payment Aggregator Section */
+        .aggregator-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .aggregator-card {
+            background: linear-gradient(135deg, var(--pure-white), var(--light-gray));
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.5s;
+            cursor: pointer;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .aggregator-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-blue);
+        }
+
+        .aggregator-image {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .aggregator-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s;
+        }
+
+        .aggregator-card:hover .aggregator-image img {
+            transform: scale(1.1);
+        }
+
+        .aggregator-content {
+            padding: 30px;
+        }
+
+        .aggregator-content h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .aggregator-stats {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid var(--medium-gray);
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .aggregator-stat {
+            text-align: center;
+        }
+
+        .aggregator-stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        .aggregator-stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Payment Gateway Section */
+        .gateway-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .gateway-card {
+            background: var(--pure-white);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.5s;
+            cursor: pointer;
+            border: 1px solid var(--light-gray);
+        }
+
+        .gateway-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-blue);
+        }
+
+        .gateway-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
+            transition: all 0.5s;
+        }
+
+        .gateway-card:hover .gateway-icon {
+            transform: rotateY(180deg);
+        }
+
+        .gateway-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .gateway-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+
+        .gateway-features {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .gateway-features li {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gateway-features li i {
+            color: var(--success-green);
+        }
+
+        /* Payment Pages Section */
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .page-card {
+            background: var(--pure-white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.5s;
+            cursor: pointer;
+        }
+
+        .page-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .page-preview {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .page-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s;
+        }
+
+        .page-card:hover .page-preview img {
+            transform: scale(1.1);
+        }
+
+        .page-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, var(--primary-blue), transparent);
+            opacity: 0;
+            transition: opacity 0.5s;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+
+        .page-card:hover .page-overlay {
+            opacity: 0.9;
+        }
+
+        .page-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .page-content {
+            padding: 20px;
+            background: var(--pure-white);
+        }
+
+        .page-content h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .page-content p {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        /* QR Codes Section */
+        .qr-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--pure-white), var(--light-gray));
+        }
+
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .qr-card {
+            background: var(--pure-white);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.5s;
+            cursor: pointer;
+        }
+
+        .qr-card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: all 0.5s;
+        }
+
+        .qr-card:hover .qr-code img {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .qr-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .qr-card p {
+            color: var(--text-light);
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .qr-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: var(--success-green);
+            color: white;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Subscription Section */
+        .subscription-section {
+            padding: 80px 0;
+            background: var(--pure-white);
+        }
+
+        .subscription-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .subscription-card {
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.5s;
+            cursor: pointer;
+            border: 1px solid var(--light-gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subscription-card.popular {
+            border: 2px solid var(--primary-blue);
+            transform: scale(105%);
+        }
+
+        .subscription-card.popular::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-size: 12px;
+        }
+
+        .subscription-card:hover {
+            transform: translateY(-15px) scale(102%);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .subscription-card.popular:hover {
+            transform: translateY(-15px) scale(107%);
+        }
+
+        .subscription-icon {
+            font-size: 50px;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+
+        .subscription-card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .subscription-price {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .subscription-period {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .subscription-features {
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .subscription-features li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subscription-features li i {
+            color: var(--success-green);
+        }
+
+        .subscription-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .subscription-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        /* Smart Collect Section */
+        .smart-collect {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--gradient-purple));
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .smart-collect::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 50px, rgba(255,255,255,0.1) 50px, rgba(255,255,255,0.1) 100px);
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            from { transform: translate(0, 0); }
+            to { transform: translate(50px, 50px); }
+        }
+
+        .smart-collect-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .smart-collect-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .smart-collect-header h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .smart-collect-header p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .collect-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .collect-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.5s;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .collect-card:hover {
+            transform: translateY(-15px);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .collect-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .collect-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .collect-card p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .collect-link {
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .collect-link:hover {
+            gap: 15px;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 80px 0;
+            background: var(--pure-white);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--light-gray);
+            border-radius: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-10px);
+            background: var(--gradient-blue);
+            color: white;
+        }
+
+        .feature-item:hover i,
+        .feature-item:hover h3,
+        .feature-item:hover p {
+            color: white;
+        }
+
+        .feature-item i {
+            font-size: 32px;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .feature-item h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .feature-item p {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 60px 0;
+            background: var(--gradient-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-content {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .cta-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 40px;
+            background: white;
+            color: var(--primary-blue);
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+            gap: 20px;
+        }
+
+        /* 404 Page */
+        .error-404 {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .error-404.active {
+            display: flex;
+        }
+
+        .error-content {
+            text-align: center;
+            max-width: 500px;
+            animation: popIn 0.5s;
+        }
+.service-btn{
+display:inline-block;
+padding:10px 24px;
+border-radius:25px;
+text-decoration:none;
+font-weight:500;
+border:1px solid var(--primary-blue);
+transition:0.3s;
+}
+
+.service-btn:hover{
+background:var(--primary-blue);
+color:white;
+}
+        @keyframes popIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .error-icon {
+            font-size: 80px;
+            color: var(--primary-blue);
+            margin-bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .error-title {
+            font-size: 72px;
+            font-weight: bold;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: var(--text-light);
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .error-btn {
+            padding: 15px 40px;
+            background: var(--gradient-blue);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .error-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-blue);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .services-hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .services-hero-text {
+                padding-right: 0;
+            }
+
+            .services-hero-stats {
+                justify-content: center;
+            }
+
+            .services-grid,
+            .gateway-grid,
+            .pages-grid,
+            .subscription-grid,
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .qr-grid,
+            .collect-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 32px;
+            }
+
+            .services-hero-title {
+                font-size: 36px;
+            }
+
+            .services-hero-stats {
+                flex-direction: column;
+                gap: 20px;
+                align-items: center;
+            }
+
+            .services-hero-stat-item {
+                text-align: center;
+            }
+
+            .services-grid,
+            .aggregator-grid,
+            .gateway-grid,
+            .pages-grid,
+            .qr-grid,
+            .subscription-grid,
+            .collect-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .subscription-card.popular {
+                transform: scale(100%);
+            }
+
+            .subscription-card.popular:hover {
+                transform: translateY(-15px);
+            }
+
+            .feature-item {
+                padding: 20px;
+            }
+
+            .cta-content h2 {
+                font-size: 28px;
+            }
+
+            .error-title {
+                font-size: 48px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .services-hero-title {
+                font-size: 28px;
+            }
+
+            .services-hero-description {
+                font-size: 16px;
+            }
+
+            .service-card {
+                margin: 0 10px;
+            }
+
+            .service-content {
+                padding: 20px;
+            }
+
+            .aggregator-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .subscription-card {
+                padding: 30px 20px;
+            }
+
+            .subscription-price {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#000;
+}
+
+/* HERO SECTION */
+
+.stackly-hero{
+position:relative;
+height:100vh;
+width:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
+overflow:hidden;
+}
+
+/* VIDEO */
+
+.stackly-hero video{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-1;
+}
+
+/* OVERLAY */
+
+.stackly-overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.55);
+z-index:-1;
+}
+
+/* CONTENT */
+
+.stackly-hero-content{
+max-width:700px;
+padding:20px;
+}
+
+.stackly-hero-content h1{
+font-size:50px;
+margin-bottom:20px;
+}
+
+.stackly-hero-content span{
+color:hsl(239, 100%, 50%);
+}
+
+.stackly-hero-content p{
+font-size:18px;
+line-height:1.6;
+margin-bottom:30px;
+}
+
+/* BUTTON */
+
+.stackly-btn{
+display:inline-block;
+background:hsl(244, 100%, 50%);
+color:white;
+padding:14px 34px;
+border-radius:30px;
+text-decoration:none;
+font-size:16px;
+transition:.3s;
+}
+
+.stackly-btn:hover{
+background:#009bd1;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.stackly-hero-content h1{
+font-size:32px;
+}
+
+.stackly-hero-content p{
+font-size:15px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<section class="stackly-hero">
+
+<video autoplay muted loop playsinline>
+<source src="12716-241674181_medium (1).mp4" type="video/mp4">
+</video>
+
+<div class="stackly-overlay"></div>
+
+<div class="stackly-hero-content">
+
+<h1>
+Stackly <span>Payment Gateway</span> Services
+</h1>
+
+<p>
+Secure, fast and scalable payment gateway for modern businesses.
+Accept UPI, cards, wallets and netbanking with one simple integration.
+</p>
+
+<a href="404.html" class="stackly-btn">
+Explore Services
+</a>
+
+</div>
+
+</section>
+
+</body>
+</html>
+
+
+        <!-- Payment Aggregator Section -->
+        <section class="services-section">
+            <div class="section-header">
+                <span class="section-subtitle reveal">Payment Aggregator</span>
+                <h2 class="section-title reveal">One Integration, Multiple Payments</h2>
+                <p class="section-description reveal">
+                    Accept payments through all major methods with a single integration
+                </p>
+            </div>
+
+            <div class="aggregator-grid">
+                <div class="aggregator-card reveal" onclick="show404()">
+                    <div class="aggregator-image">
+                        <img src="digital40.webp" alt="All Payments">
+                    </div>
+                    <div class="aggregator-content">
+                        <h3>All-in-One Payment Aggregator</h3>
+                        <p>Accept credit cards, debit cards, UPI, netbanking, wallets, and EMI all through one platform.</p>
+                        <div class="aggregator-stats">
+                            <div class="aggregator-stat">
+                                <div class="aggregator-stat-value">15+</div>
+                                <div class="aggregator-stat-label">Payment Modes</div>
+                            </div>
+                            <div class="aggregator-stat">
+                                <div class="aggregator-stat-value">100%</div>
+                                <div class="aggregator-stat-label">Coverage</div>
+                            </div>
+                            <div class="aggregator-stat">
+                                <div class="aggregator-stat-value">2.5%</div>
+                                <div class="aggregator-stat-label">Avg. Fees</div>
+                            </div>
+                        </div>
+                         <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Learn More
+
+</a>
+                    </div>
+                </div>
+                <div class="aggregator-card reveal" onclick="show404()">
+                    <div class="aggregator-image">
+                        <img src="digital39.webp" alt="Smart Routing">
+                    </div>
+                    <div class="aggregator-content">
+                        <h3>Smart Payment Routing</h3>
+                        <p>Intelligent routing algorithm automatically selects the best payment gateway for maximum success.</p>
+                        <div class="aggregator-stats">
+                            <div class="aggregator-stat">
+                                <div class="aggregator-stat-value">99.5%</div>
+                                <div class="aggregator-stat-label">Success Rate</div>
+                            </div>
+                            <div class="aggregator-stat">
+                                <div class="aggregator-stat-value">30%</div>
+                                <div class="aggregator-stat-label">Cost Savings</div>
+                            </div>
+                            <div class="aggregator-stat">
+                                <div class="aggregator-stat-value">50ms</div>
+                                <div class="aggregator-stat-label">Decision Time</div>
+                            </div>
+                        </div>
+                       <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Learn More
+
+</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Gateway Section -->
+        <section class="services-section">
+            <div class="section-header">
+                <span class="section-subtitle reveal">Payment Gateway</span>
+                <h2 class="section-title reveal">Powerful, Secure, Scalable</h2>
+                <p class="section-description reveal">
+                    Enterprise-grade payment gateway with advanced features
+                </p>
+            </div>
+
+            <div class="gateway-grid">
+                <div class="gateway-card reveal" onclick="show404()">
+                    <div class="gateway-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Quick Checkout</h3>
+                    <div class="gateway-price">1.9% + ₹2</div>
+                    <ul class="gateway-features">
+                        <li><i class="fas fa-check"></i> One-click checkout</li>
+                        <li><i class="fas fa-check"></i> Card saving</li>
+                        <li><i class="fas fa-check"></i> Auto-fill OTP</li>
+                        <li><i class="fas fa-check"></i> 100+ currencies</li>
+                    </ul>
+                    <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Activate Now
+</a>
+                </div>
+                <div class="gateway-card reveal" onclick="show404()">
+                    <div class="gateway-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Secure Gateway</h3>
+                    <div class="gateway-price">2.1% + ₹3</div>
+                    <ul class="gateway-features">
+                        <li><i class="fas fa-check"></i> 3D Secure 2.0</li>
+                        <li><i class="fas fa-check"></i> Tokenization</li>
+                        <li><i class="fas fa-check"></i> Fraud detection</li>
+                        <li><i class="fas fa-check"></i> PCI DSS Level 1</li>
+                    </ul>
+                    <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Activate Now
+</a>
+                </div>
+                <div class="gateway-card reveal" onclick="show404()">
+                    <div class="gateway-icon"><i class="fas fa-globe"></i></div>
+                    <h3>International</h3>
+                    <div class="gateway-price">2.9% + ₹5</div>
+                    <ul class="gateway-features">
+                        <li><i class="fas fa-check"></i> Multi-currency</li>
+                        <li><i class="fas fa-check"></i> Forex rates</li>
+                        <li><i class="fas fa-check"></i> DCC supported</li>
+                        <li><i class="fas fa-check"></i> 190+ countries</li>
+                    </ul>
+                    <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Activate Now
+</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Pages Section -->
+        <section class="services-section">
+            <div class="section-header">
+                <span class="section-subtitle reveal">Payment Pages</span>
+                <h2 class="section-title reveal">Beautiful, Customizable Checkout</h2>
+                <p class="section-description reveal">
+                    Create stunning payment pages in minutes - no coding required
+                </p>
+            </div>
+
+            <div class="pages-grid">
+                <div class="page-card reveal" onclick="show404()">
+                    <div class="page-preview">
+                        <span class="page-badge">Popular</span>
+                        <img src="digital7.webp" alt="Standard Page">
+                        <div class="page-overlay">
+                            <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Preview
+</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <h3>Standard Checkout</h3>
+                        <p>Clean, professional payment page</p>
+                    </div>
+                </div>
+                <div class="page-card reveal" onclick="show404()">
+                    <div class="page-preview">
+                        <span class="page-badge">Branded</span>
+                        <img src="digital18.webp" alt="Branded Page">
+                        <div class="page-overlay">
+                           <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Preview
+</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <h3>Branded Checkout</h3>
+                        <p>Custom colors & logo</p>
+                    </div>
+                </div>
+                <div class="page-card reveal" onclick="show404()">
+                    <div class="page-preview">
+                        <span class="page-badge">Mobile</span>
+                        <img src="digital19.webp" alt="Mobile Page">
+                        <div class="page-overlay">
+                           <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Preview
+</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <h3>Mobile Optimized</h3>
+                        <p>Perfect for smartphones</p>
+                    </div>
+                </div>
+                <div class="page-card reveal" onclick="show404()">
+                    <div class="page-preview">
+                        <span class="page-badge">Subscription</span>
+                        <img src="digital20.webp" alt="Subscription Page">
+                        <div class="page-overlay">
+                            <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Preview
+</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <h3>Subscription Page</h3>
+                        <p>Recurring payments</p>
+                    </div>
+                </div>
+                <div class="page-card reveal" onclick="show404()">
+                    <div class="page-preview">
+                        <span class="page-badge">Invoice</span>
+                        <img src="digital21.webp" alt="Invoice Page">
+                        <div class="page-overlay">
+                           <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Preview
+</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <h3>Invoice Payment</h3>
+                        <p>Pay bills online</p>
+                    </div>
+                </div>
+                <div class="page-card reveal" onclick="show404()">
+                    <div class="page-preview">
+                        <span class="page-badge">Donation</span>
+                        <img src="digital22.webp" alt="Donation Page">
+                        <div class="page-overlay">
+                           <a href="404.html" class="service-btn" style="background: white; color: var(--primary-blue);">
+Preview
+</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <h3>Donation Page</h3>
+                        <p>Accept contributions</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QR Codes Section -->
+        <section class="qr-section">
+            <div class="section-header">
+                <span class="section-subtitle reveal">QR Codes</span>
+                <h2 class="section-title reveal">Scan & Pay Instantly</h2>
+                <p class="section-description reveal">
+                    Generate and manage QR codes for instant payments
+                </p>
+            </div>
+
+            <div class="qr-grid">
+                <div class="qr-card reveal" onclick="show404()">
+                    <div class="qr-code">
+                        <img src="qrcode.webp" alt="UPI QR">
+                    </div>
+                    <h3>UPI QR Code</h3>
+                    <p>Accept UPI payments instantly</p>
+                 <a href="404.html">  <span class="qr-badge">Free</span></a> 
+                </div>
+                <div class="qr-card reveal" onclick="show404()">
+                    <div class="qr-code">
+                        <img src="qrcode.webp" alt="Dynamic QR">
+                    </div>
+                    <h3>Dynamic QR</h3>
+                    <p>Change amount anytime</p>
+                 <a href="404.html">  <span class="qr-badge">Smart</span></a> 
+                </div>
+                <div class="qr-card reveal" onclick="show404()">
+                    <div class="qr-code">
+                        <img src="qrcode.webp" alt="Static QR">
+                    </div>
+                    <h3>Static QR</h3>
+                    <p>Fixed amount QR</p>
+                <a href="404.html">   <span class="qr-badge">Simple</span></a> 
+                </div>
+                <div class="qr-card reveal" onclick="show404()">
+                    <div class="qr-code">
+                        <img src="qrcode.webp" alt="Business QR">
+                    </div>
+                    <h3>Business QR</h3>
+                    <p>Multi-payment QR code</p>
+                   <a href="404.html"> <span class="qr-badge">Premium</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subscription Section -->
+        <section class="subscription-section">
+            <div class="section-header">
+              <span class="section-subtitle reveal">Subscriptions</span>
+                <h2 class="section-title reveal">Recurring Payments Made Easy</h2>
+                <p class="section-description reveal">
+                    Manage subscriptions, memberships, and recurring billing
+                </p>
+            </div>
+
+            <div class="subscription-grid">
+                <div class="subscription-card reveal" onclick="show404()">
+                    <div class="subscription-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Starter</h3>
+                    <div class="subscription-price">₹999</div>
+                    <div class="subscription-period">per month</div>
+                    <ul class="subscription-features">
+                        <li><i class="fas fa-check"></i> Up to 1000 customers</li>
+                        <li><i class="fas fa-check"></i> Basic analytics</li>
+                       
+                        <li><i class="fas fa-check"></i> Email support</li>
+                        <li><i class="fas fa-check"></i> API access</li>
+                    </ul>
+                 <a href="404.html">  <button class="subscription-btn">Start Free Trial</button></a> 
+                </div>
+                <div class="subscription-card popular reveal" onclick="show404()">
+                    <div class="subscription-icon"><i class="fas fa-crown"></i></div>
+                    <h3>Business</h3>
+                    <div class="subscription-price">₹2,999</div>
+                    <div class="subscription-period">per month</div>
+                    <ul class="subscription-features">
+                        <li><i class="fas fa-check"></i> Unlimited customers</li>
+                        <li><i class="fas fa-check"></i> Advanced analytics</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                       
+                        <li><i class="fas fa-check"></i> Smart retries</li>
+                    </ul>
+             <a href="404.html">     <button class="subscription-btn">Start Free Trial</button></a>  
+                </div>
+                <div class="subscription-card reveal" onclick="show404()">
+                    <div class="subscription-icon"><i class="fas fa-building"></i></div>
+                    <h3>Enterprise</h3>
+                    <div class="subscription-price">Custom</div>
+                    <div class="subscription-period">contact us</div>
+                    <ul class="subscription-features">
+                        <li><i class="fas fa-check"></i> Custom contract</li>
+                        <li><i class="fas fa-check"></i> Dedicated account</li>
+                        <li><i class="fas fa-check"></i> SLA guarantee</li>
+                        <li><i class="fas fa-check"></i> On-premise option</li>
+                    </ul>
+                 <a href="404.html">  <button class="subscription-btn">Contact Sales</button></a> 
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="section-header">
+                <span class="section-subtitle reveal">Features</span>
+                <h2 class="section-title reveal">Why Businesses Love Stackly</h2>
+                <p class="section-description reveal">
+                    Everything you need to manage payments effectively
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-item reveal" onclick="show404()">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Instant Activation</h3>
+                    <p>Go live in minutes</p>
+                </div>
+                <div class="feature-item reveal" onclick="show404()">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Bank Grade Security</h3>
+                    <p>PCI DSS Level 1</p>
+                </div>
+                <div class="feature-item reveal" onclick="show404()">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Real-time Analytics</h3>
+                    <p>Live dashboard</p>
+                </div>
+                <div class="feature-item reveal" onclick="show404()">
+                    <i class="fas fa-code"></i>
+                    <h3>Developer Friendly</h3>
+                    <p>Beautiful API docs</p>
+                </div>
+                <div class="feature-item reveal" onclick="show404()">
+                    <i class="fas fa-headset"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Always here to help</p>
+                </div>
+                <div class="feature-item reveal" onclick="show404()">
+                    <i class="fas fa-sync-alt"></i>
+                    <h3>Auto Reconciliation</h3>
+                    <p>Match payments easily</p>
+                </div>
+                <div class="feature-item reveal" onclick="show404()">
+                    <i class="fas fa-file-invoice"></i>
+                    <h3>Automated Invoicing</h3>
+                    <p>Send & track invoices</p>
+                </div>
+                <div class="feature-item reveal" onclick="show404()">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Mobile SDK</h3>
+                    <p>iOS & Android ready</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2 class="reveal">Ready to Transform Your Payments?</h2>
+                    <p class="reveal">Join 100,000+ businesses already using Stackly</p>
+                 <a href="404.html">   <button class="cta-btn reveal" onclick="show404()">
+                        Get Started Now <i class="fas fa-arrow-right"></i>
+                    </button></a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Scroll Reveal Animation
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+            
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveals[i].getBoundingClientRect().top;
+                const revealPoint = 150;
+                
+                if (revealTop < windowHeight - revealPoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
+        window.addEventListener('scroll', reveal);
+        window.addEventListener('load', reveal);
+
+        // Show 404 Page
+        function show404() {
+            const error404 = document.getElementById('error404');
+            error404.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hide404() {
+            const error404 = document.getElementById('error404');
+            error404.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close 404 with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hide404();
+            }
+        });
+
+        // Click outside to close
+        document.getElementById('error404').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hide404();
+            }
+        });
+    </script>
+    <script>
+function show404(event){
+event.preventDefault(); 
+window.location.href="404.html";
+}
+</script>
+</body>
+</html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #f5f9ff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* ===== PREMIUM PAYMENT GATEWAY FOOTER ===== */
+    .footer {
+      background: #0f1a2b;  /* deep black-blue */
+      color: #e6ecf5;
+      border-top: 4px solid #2b6cff;
+      position: relative;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(0,0,0,0.3);
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #2b6cff, #ffffff, #2b6cff);
+      opacity: 0.5;
+    }
+
+    .footer-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+    }
+
+    /* Footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #2b6cff;
+      border-radius: 2px;
+    }
+
+    /* Brand column with logo image */
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-logo img {
+      height: auto;
+      width: 150px;
+      max-width: 160px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* makes white logo - remove if logo is colored */
+    }
+
+    .footer-about {
+      color: #b0c6e0;
+      line-height: 1.7;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      max-width: 300px;
+    }
+
+    /* Social media icons - 4 items */
+    .footer-social {
+      display: flex;
+      gap: 15px;
+    }
+
+    .footer-social a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1f2f44;
+      color: #2b6cff;
+      font-size: 1.3rem;
+      transition: 0.25s;
+      text-decoration: none;
+      border: 2px solid transparent;
+    }
+
+    .footer-social a:hover {
+      background: #2b6cff;
+      color: white;
+      transform: translateY(-5px);
+      border-color: white;
+    }
+
+    /* Links columns */
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul li a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .footer-col ul li a i {
+      color: #2b6cff;
+      font-size: 0.8rem;
+      width: 18px;
+    }
+
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* Contact column */
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #c9d9f0;
+    }
+
+    .contact-item i {
+      width: 24px;
+      color: #2b6cff;
+      font-size: 1.1rem;
+    }
+
+    .payment-badges {
+      display: flex;
+      gap: 10px;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: #1f2f44;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      border: 1px solid #2b6cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge i {
+      color: #2b6cff;
+    }
+
+    /* Newsletter - IMPROVED MOBILE VERSION */
+    .newsletter {
+      margin-top: 1.5rem;
+    }
+
+    .newsletter h4 {
+      color: white;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .newsletter-box {
+      display: flex;
+      background: #1a2538;
+      border-radius: 60px;
+      overflow: hidden;
+      border: 2px solid #2b6cff;
+      width: 100%;
+    }
+
+    .newsletter-box input {
+      flex: 1;
+      min-width: 0; /* prevents overflow on mobile */
+      padding: 0.9rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+    }
+
+    .newsletter-box input::placeholder {
+      color: #8a9fc0;
+    }
+
+    .newsletter-box button {
+      background: #2b6cff;
+      border: none;
+      padding: 0 1.2rem;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      border-left: 2px solid white;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: auto;
+    }
+
+    .newsletter-box button i {
+      font-size: 0.9rem;
+    }
+
+    .newsletter-box button:hover {
+      background: white;
+      color: #0f1a2b;
+    }
+
+    .error-message {
+      color: #ff6b6b;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* Footer bottom */
+    .footer-bottom {
+      background: #0a1320;
+      padding: 1.5rem 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #1f3a70;
+      color: #9bb0d0;
+      font-size: 0.9rem;
+    }
+
+    .footer-bottom .legal-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom .legal-links a {
+      color: #c9d9f0;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .legal-links a:hover {
+      color: #2b6cff;
+    }
+
+    .footer-bottom .payment-icons i {
+      font-size: 1.5rem;
+      margin-left: 1rem;
+      color: #5f7d9e;
+      transition: 0.2s;
+    }
+
+    .footer-bottom .payment-icons i:hover {
+      color: #2b6cff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .footer-container {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem 1.5rem;
+      }
+      
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      
+      .footer-bottom .legal-links {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .footer-bottom .payment-icons {
+        margin-top: 0.5rem;
+      }
+      
+      .footer-bottom .payment-icons i {
+        margin: 0 0.5rem;
+      }
+      
+      /* Improved mobile newsletter */
+      .newsletter-box {
+        flex-direction: column;
+        border-radius: 30px;
+      }
+      
+      .newsletter-box input {
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 2px solid #2b6cff;
+      }
+      
+      .newsletter-box button {
+        width: 100%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 2px solid white;
+        justify-content: center;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 380px) {
+      .footer-social {
+        gap: 10px;
+      }
+      
+      .footer-social a {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+      }
+      
+      .badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PREMIUM FOOTER - PAYMENT GATEWAY STYLE -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Column 1: Brand with logo image -->
+      <div class="footer-col">
+        <div class="footer-logo">
+          <!-- Logo image - replace src with your actual logo -->
+          <img src="stacklylogo (3).webp" alt="Stackly Pay" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span style="display:none; font-size:1.8rem; font-weight:700; color:white;">STACKLY<span style="color:#2b6cff;">pay</span></span>
+        </div>
+        <p class="footer-about">
+          Enterprise-grade payment gateway processing billions in transactions. Secure, scalable, and built for growth.
+        </p>
+        <!-- 4 SOCIAL MEDIA ICONS -->
+        <div class="footer-social">
+          <a href="404.html"><i class="fab fa-linkedin-in"></i></a>
+         
+          <a href="404.html"><i class="fab fa-instagram"></i></a>
+          <a href="404.html"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <!-- Column 2: Solutions (all links to 404) -->
+      <div class="footer-col">
+        <h3>Solutions</h3>
+        <ul>
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="soluation.html"><i class="fas fa-chevron-right"></i> Soluation</a></li>
+          <li><a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+          <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+          <li><a href="about.html"><i class="fas fa-chevron-right"></i> About</a></li>
+          <li><a href="blog.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Company (all links to 404) -->
+      <div class="footer-col">
+        <h3>Company</h3>
+        <ul>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Careers</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Blog</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Press</a></li>
+          <li><a href="404.html"><i class="fas fa-chevron-right"></i> Partners</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Contact & Newsletter with validation -->
+      <div class="footer-col">
+        <h3>Connect</h3>
+        <div class="contact-item">
+          <i class="fas fa-map-pin"></i>
+          <span>100 Financial District, Bengaluru, India 571426</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <span>+91 9568759723</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>hello@stacklypay.com</span>
+        </div>
+
+        <!-- Payment badges -->
+        <div class="payment-badges">
+          <span class="badge"><i class="fab fa-cc-visa"></i> Visa</span>
+          <span class="badge"><i class="fab fa-cc-mastercard"></i> MC</span>
+          <span class="badge"><i class="fab fa-cc-amex"></i> Amex</span>
+        </div>
+
+        <!-- Newsletter with email validation -->
+        <div class="newsletter">
+          <h4>Stay updated</h4>
+          <div class="newsletter-box">
+            <input type="email" placeholder="your@email.com" id="newsletterEmail">
+            <button id="subscribeBtn"><i class="fas fa-paper-plane"></i> Subscribe</button>
+          </div>
+          <div class="error-message" id="emailError">Please enter a valid email address</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer bottom (all links to 404) -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        © 2026 Stackly Pay. All rights reserved.
+      </div>
+      <div class="legal-links">
+        <a href="404.html">Privacy Policy</a>
+        <a href="404.html">Terms of Service</a>
+        <a href="404.html">Cookie Policy</a>
+        <a href="404.html">GDPR</a>
+      </div>
+      <div class="payment-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+        <i class="fab fa-cc-amex"></i>
+        <i class="fab fa-cc-paypal"></i>
+        <i class="fab fa-cc-stripe"></i>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Email validation and redirect to 404
+      const emailInput = document.getElementById('newsletterEmail');
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const emailError = document.getElementById('emailError');
+
+      function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+
+      function handleSubscribe() {
+        const email = emailInput.value.trim();
+        
+        if (email === '' || !validateEmail(email)) {
+          emailError.classList.add('show');
+        } else {
+          emailError.classList.remove('show');
+          // Redirect to 404 page
+          window.location.href = '404.html';
+        }
+      }
+
+      if (subscribeBtn && emailInput) {
+        subscribeBtn.addEventListener('click', handleSubscribe);
+        
+        emailInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            handleSubscribe();
+          }
+        });
+
+        // Clear error when user starts typing
+        emailInput.addEventListener('input', () => {
+          emailError.classList.remove('show');
+        });
+      }
+
+      // All footer links already point to 404.html
+    })();
+  </script>
+</body>
+</html>
